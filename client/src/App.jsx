@@ -1,57 +1,11 @@
-import { useState } from 'react';
-import { Outlet } from 'react-router-dom';
-
-import Navbar from './components/Navbar';
-import Sidebar from './components/Sidebar';
-import MenuForSmAndMd from './components/MenuForSmAndMd';
-import Wallet from './components/Wallet';
-import Footer from './components/Footer';
+import React from 'react';
+import AllInOneCasino from './components/AllInOneCasino';
 
 function App() {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [isWalletOpen, setIsWalletOpen] = useState(false);
-
   return (
-    <>
-      {/* Layout Container */}
-      <div className="flex h-screen overflow-hidden">
-        
-        {/* Mobile/Tablet Sidebar Menu */}
-        <MenuForSmAndMd isOpen={isSidebarOpen} setIsOpen={setIsSidebarOpen} />
-        
-        {/* Desktop Sidebar */}
-        <Sidebar />
-
-        {/* Main Content Area */}
-        <div className="flex flex-col flex-1 bg-[#1A2C38]">
-          
-          {/* Navbar */}
-          <Navbar 
-            setIsSidebarOpen={setIsSidebarOpen} 
-            setIsWalletOpen={setIsWalletOpen} 
-          />
-
-          {/* Page Content */}
-          <main className="flex min-h-[92vh] flex-col justify-between overflow-y-auto scrollbar-hide space-y-4 bg-[#0F1B24]">
-            <div>
-              <Outlet />
-            </div>
-            <Footer />
-          </main>
-        </div>
-
-        {/* Wallet Modal */}
-        {isWalletOpen && (
-          <Wallet 
-            onClose={() => setIsWalletOpen(false)} 
-            setIsWalletOpen={setIsWalletOpen} 
-          />
-        )}
-      </div>
-
-      {/* Footer */}
-      {/* <Footer /> */}
-    </>
+    <div>
+      <AllInOneCasino />
+    </div>
   );
 }
 
