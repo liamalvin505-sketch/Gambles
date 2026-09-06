@@ -7,13 +7,20 @@ export default function App() {
   const [selectedGame, setSelectedGame] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
 
-  // প্রফেশনাল ক্যাসিনো গেম লিস্ট
+  // বিশাল গেম লিস্ট (JILI, SPRIBE, PG SOFT)
   const games = [
     { id: 1, name: 'Super Ace', provider: 'JILI', category: 'slot', url: 'https://democasino.pgsoft.com/games/slot/id/69' },
     { id: 2, name: 'Aviator', provider: 'SPRIBE', category: 'crash', url: 'https://demo.spribe.co/launch/aviator' },
     { id: 3, name: 'Wild Bounty Showdown', provider: 'PG', category: 'slot', url: 'https://democasino.pgsoft.com/games/slot/id/74' },
     { id: 4, name: 'Mahjong Ways 2', provider: 'PG', category: 'slot', url: 'https://democasino.pgsoft.com/games/slot/id/74' },
-    { id: 5, name: 'Live Roulette', provider: 'EVO', category: 'live', url: 'https://casino.delawartest.com/iframe-roulette' }
+    { id: 5, name: 'Gates of Olympus', provider: 'PRAGMATIC', category: 'slot', url: 'https://democasino.pgsoft.com/games/slot/id/69' },
+    { id: 6, name: 'Fortune Gems', provider: 'JILI', category: 'slot', url: 'https://democasino.pgsoft.com/games/slot/id/74' },
+    { id: 7, name: 'Money Coming', provider: 'JILI', category: 'slot', url: 'https://democasino.pgsoft.com/games/slot/id/69' },
+    { id: 8, name: 'Spaceman', provider: 'PRAGMATIC', category: 'crash', url: 'https://demo.spribe.co/launch/aviator' },
+    { id: 9, name: 'Candy Bonanza', provider: 'PG', category: 'slot', url: 'https://democasino.pgsoft.com/games/slot/id/74' },
+    { id: 10, name: 'Live Roulette', provider: 'EVO', category: 'live', url: 'https://casino.delawartest.com/iframe-roulette' },
+    { id: 11, name: 'Baccarat Live', provider: 'EVO', category: 'live', url: 'https://casino.delawartest.com/iframe-roulette' },
+    { id: 12, name: 'Dragon Tiger', provider: 'JILI', category: 'live', url: 'https://casino.delawartest.com/iframe-roulette' }
   ];
 
   const filteredGames = games.filter(game => {
@@ -23,15 +30,15 @@ export default function App() {
   });
 
   return (
-    <div style={{ background: '#0f1423', color: '#fff', minHeight: '100vh', fontFamily: 'Arial, sans-serif', paddingBottom: '60px' }}>
+    <div style={{ background: '#0f1423', color: '#fff', minHeight: '100vh', fontFamily: 'Arial, sans-serif', paddingBottom: '70px' }}>
       
-      {/* টপ হেডার (QQ777 Style) */}
+      {/* টপ হেডার (LA94.COM) */}
       <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 15px', background: '#1a2238', borderBottom: '1px solid #2a3655' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-          <span style={{ fontSize: '20px', fontWeight: 'bold', color: '#ffcc00', fontStyle: 'italic' }}>QQ777<span style={{color: '#fff', fontSize: '12px'}}>.COM</span></span>
+          <span style={{ fontSize: '20px', fontWeight: 'bold', color: '#ffcc00', fontStyle: 'italic' }}>LA94<span style={{color: '#fff', fontSize: '12px'}}>.COM</span></span>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-          <span style={{ fontSize: '14px', fontWeight: 'bold', color: '#00ffcc' }}>{balance}</span>
+          <span style={{ fontSize: '14px', fontWeight: 'bold', color: '#00ffcc' }}>৳ {balance}</span>
           <button onClick={() => window.location.reload()} style={{ background: 'none', border: 'none', color: '#fff', cursor: 'pointer', fontSize: '16px' }}>🔄</button>
           <span style={{ background: '#ff3366', color: '#fff', borderRadius: '50%', width: '18px', height: '18px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '10px' }}>9</span>
         </div>
@@ -79,7 +86,7 @@ export default function App() {
         </div>
       </div>
 
-      {/* মূল কন্টেন্ট ও জ্যাকপট ব্যানার */}
+      {/* মূল কন্টেন্ট ও গেম লিস্ট */}
       <main style={{ padding: '15px' }}>
         {selectedGame ? (
           <div>
@@ -122,18 +129,18 @@ export default function App() {
             </div>
 
             <div style={{ display: 'flex', gap: '8px', marginBottom: '15px', overflowX: 'auto' }}>
-              {['all', 'JILI', 'SPRIBE', 'PG'].map(provider => (
+              {['all', 'JILI', 'SPRIBE', 'PG', 'PRAGMATIC', 'EVO'].map(provider => (
                 <button 
                   key={provider}
                   onClick={() => setActiveProvider(provider)}
                   style={{ background: activeProvider === provider ? '#3b82f6' : '#1a2238', color: '#fff', border: '1px solid #2a3655', padding: '6px 15px', borderRadius: '6px', cursor: 'pointer', fontSize: '12px', fontWeight: 'bold' }}
                 >
-                  {provider.toUpperCase()}
+                  {provider}
                 </button>
               ))}
             </div>
 
-            {/* গেম গ্রিড */}
+            {/* গেম গ্রিড (একাধিক গেম কার্ড) */}
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '12px' }}>
               {filteredGames.map(game => (
                 <div key={game.id} style={{ background: '#1a2238', borderRadius: '10px', padding: '12px', textAlign: 'center', border: '1px solid #2a3655' }}>
