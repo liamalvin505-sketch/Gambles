@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 
 export default function App() {
-  const [balance, setBalance] = useState(5.15);
+  // নতুন ইউজারের জন্য ব্যালেন্স শুরুতে একদম ০.০০ থাকবে
+  const [balance, setBalance] = useState(0);
   const [activeTab, setActiveTab] = useState('hot');
   const [activeProvider, setActiveProvider] = useState('all');
   const [selectedGame, setSelectedGame] = useState(null);
@@ -66,7 +67,7 @@ export default function App() {
     return matchesProvider && matchesSearch;
   });
 
-  // ডিপোজিট হ্যান্ডলার (যত টাকা ক্যাশইন করবে তত টাকা ব্যালেন্সে অটো যোগ হবে)
+  // ক্যাশইন হ্যান্ডলার (যত টাকা ক্যাশইন করবে ঠিক তত টাকাই ব্যালেন্সে যোগ হবে)
   const handleDepositSubmit = (e) => {
     e.preventDefault();
     const amount = parseFloat(depositAmount);
@@ -129,7 +130,7 @@ export default function App() {
                 রিয়েল ব্যালেন্স: <strong style={{ color: '#00ffcc' }}>৳ {balance.toFixed(2)}</strong>
               </div>
             </div>
-            {/* গেম স্ক্রিন উইদাউট ডেমো লোগো ফ্রেমিং */}
+            {/* গেম স্ক্রিন */}
             <div style={{ width: '100%', height: '520px', background: '#000', borderRadius: '10px', overflow: 'hidden', border: '1px solid #2a3655' }}>
               <iframe src={selectedGame.url} title={selectedGame.name} width="100%" height="100%" style={{ border: 'none' }} allowFullScreen></iframe>
             </div>
