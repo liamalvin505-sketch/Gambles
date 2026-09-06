@@ -7,6 +7,7 @@ export default function App() {
   });
 
   const [activeTab, setActiveTab] = useState('home'); // home, slot, deposit, account, withdraw
+  const [subPage, setSubPage] = useState(null); // পুরস্কার সেন্টার, বেটিং রেকর্ড ইত্যাদির জন্য
   const [activeProvider, setActiveProvider] = useState('all');
   const [selectedGame, setSelectedGame] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
@@ -41,12 +42,6 @@ export default function App() {
     return () => clearInterval(interval);
   }, []);
 
-  const allProviders = [
-    'Jili', 'Pocket Games Soft', 'BNG', 'JDB', 'FA CHAI Gaming', 
-    'BTGaming', 'Naga Games', 'KA Gaming', 'PLAYSTAR', 'Askmeslot', 
-    'Evoplay', 'Spribe', 'Joker', 'PP'
-  ];
-
   const hotGames = [
     { id: 'h1', name: 'Aviator', provider: 'Spribe', url: 'https://demo.spribe.co/launch/aviator' },
     { id: 'h2', name: 'Super Ace', provider: 'Jili', url: 'https://democasino.pgsoft.com/games/slot/id/69' },
@@ -78,7 +73,7 @@ export default function App() {
       return;
     }
     if (amount > balance) {
-      alert('पर्याপ্ত ব্যালেন্স নেই!');
+      alert('পর্যাপ্ত ব্যালেন্স নেই!');
       return;
     }
     setBalance(prev => prev - amount);
@@ -87,10 +82,25 @@ export default function App() {
     setActiveTab('home');
   };
 
+  const renderSubPageView = () => {
+    return (
+      <div style={{ background: '#182030', padding: '15px', borderRadius: '10px', border: '1px solid #222d42', minHeight: '350px' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px', borderBottom: '1px solid #222d42', paddingBottom: '10px' }}>
+          <h3 style={{ color: '#ffb800', fontSize: '15px', margin: 0 }}>{subPage}</h3>
+          <button onClick={() => setSubPage(null)} style={{ background: '#222d42', color: '#fff', border: 'none', padding: '5px 10px', borderRadius: '5px', cursor: 'pointer', fontSize: '11px' }}>← পেছনে</button>
+        </div>
+        <div style={{ textAlign: 'center', color: '#aaa', padding: '40px 0', fontSize: '13px' }}>
+          <div style={{ fontSize: '30px', marginBottom: '10px' }}>📂</div>
+          {subPage} এর কোনো ডাটা পাওয়া যায়নি।
+        </div>
+      </div>
+    );
+  };
+
   return (
     <div style={{ background: '#121824', color: '#fff', minHeight: '100vh', fontFamily: 'Arial, sans-serif', paddingBottom: '70px', maxWidth: '480px', margin: '0 auto', position: 'relative' }}>
       
-      {/* টপ হেডার (QQ77 স্টাইল) */}
+      {/* টপ হেডার */}
       <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 15px', background: '#182030', borderBottom: '1px solid #222d42', position: 'sticky', top: 0, zIndex: 100 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
           <span onClick={() => setDrawerOpen(true)} style={{ fontSize: '22px', cursor: 'pointer', color: '#fff' }}>☰</span>
@@ -105,7 +115,7 @@ export default function App() {
         </div>
       </header>
 
-      {/* সাইড মেনু ড্রয়ার (যেমন ৩৩৯৫ নম্বর স্ক্রিনশটে আছে) */}
+      {/* সাইড মেনু ড্রয়ার */}
       {drawerOpen && (
         <div style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', background: 'rgba(0,0,0,0.7)', zIndex: 2000, display: 'flex' }}>
           <div style={{ width: '280px', background: '#182030', height: '100%', padding: '15px', display: 'flex', flexDirection: 'column', gap: '15px' }}>
@@ -121,15 +131,15 @@ export default function App() {
             </div>
             
             <div style={{ display: 'flex', gap: '10px' }}>
-              <button onClick={() => { setActiveTab('deposit'); setDrawerOpen(false); }} style={{ flex: 1, background: '#ef4444', border: 'none', color: '#fff', padding: '8px', borderRadius: '5px', fontWeight: 'bold', fontSize: '12px', cursor: 'pointer' }}>ডিপোজিট</button>
-              <button onClick={() => { setActiveTab('withdraw'); setDrawerOpen(false); }} style={{ flex: 1, background: '#3b82f6', border: 'none', color: '#fff', padding: '8px', borderRadius: '5px', fontWeight: 'bold', fontSize: '12px', cursor: 'pointer' }}>উত্তোলন</button>
+              <button onClick={() => { setActiveTab('deposit'); setSubPage(null); setDrawerOpen(false); }} style={{ flex: 1, background: '#ef4444', border: 'none', color: '#fff', padding: '8px', borderRadius: '5px', fontWeight: 'bold', fontSize: '12px', cursor: 'pointer' }}>ডিপোজিট</button>
+              <button onClick={() => { setActiveTab('withdraw'); setSubPage(null); setDrawerOpen(false); }} style={{ flex: 1, background: '#3b82f6', border: 'none', color: '#fff', padding: '8px', borderRadius: '5px', fontWeight: 'bold', fontSize: '12px', cursor: 'pointer' }}>উত্তোলন</button>
             </div>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', fontSize: '13px', color: '#ccc' }}>
-              <div onClick={() => { setActiveTab('deposit'); setDrawerOpen(false); }} style={{ cursor: 'pointer' }}>🏛️ ডিপোজিট</div>
-              <div onClick={() => { setActiveTab('withdraw'); setDrawerOpen(false); }} style={{ cursor: 'pointer' }}>💳 উত্তোলন করুন</div>
-              <div onClick={() => { setActiveTab('account'); setDrawerOpen(false); }} style={{ cursor: 'pointer' }}>👤 আমার অ্যাকাউন্ট</div>
-              <div onClick={() => { setActiveTab('home'); setDrawerOpen(false); }} style={{ cursor: 'pointer' }}>🏠 হোম পেজ</div>
+              <div onClick={() => { setActiveTab('deposit'); setSubPage(null); setDrawerOpen(false); }} style={{ cursor: 'pointer' }}>🏛️ ডিপোজিট</div>
+              <div onClick={() => { setActiveTab('withdraw'); setSubPage(null); setDrawerOpen(false); }} style={{ cursor: 'pointer' }}>💳 উত্তোলন করুন</div>
+              <div onClick={() => { setActiveTab('account'); setSubPage(null); setDrawerOpen(false); }} style={{ cursor: 'pointer' }}>👤 আমার অ্যাকাউন্ট</div>
+              <div onClick={() => { setActiveTab('home'); setSubPage(null); setDrawerOpen(false); }} style={{ cursor: 'pointer' }}>🏠 হোম পেজ</div>
             </div>
 
             <div style={{ marginTop: 'auto' }}>
@@ -159,6 +169,8 @@ export default function App() {
               <iframe src={selectedGame.url} title={selectedGame.name} width="100%" height="100%" style={{ border: 'none' }} allowFullScreen></iframe>
             </div>
           </div>
+        ) : subPage ? (
+          renderSubPageView()
         ) : activeTab === 'deposit' ? (
           /* ডিপোজিট পেজ */
           <div style={{ background: '#182030', padding: '15px', borderRadius: '10px', border: '1px solid #222d42' }}>
@@ -188,8 +200,18 @@ export default function App() {
               <button type="submit" style={{ width: '100%', background: '#3b82f6', color: '#fff', border: 'none', padding: '10px', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer', fontSize: '13px' }}>উত্তোলন অনুরোধ পাঠান</button>
             </form>
           </div>
+        ) : activeTab === 'promotion' ? (
+          /* প্রমোশন পেজ */
+          <div style={{ background: '#182030', padding: '15px', borderRadius: '10px', border: '1px solid #222d42', minHeight: '350px' }}>
+            <h3 style={{ color: '#ffb800', marginBottom: '12px', fontSize: '15px', textAlign: 'center' }}>🎁 প্রমোশন ও অফার</h3>
+            <div style={{ background: '#121824', padding: '12px', borderRadius: '8px', marginBottom: '10px', border: '1px solid #222d42' }}>
+              <h4 style={{ color: '#ff3366', fontSize: '13px', margin: '0 0 5px 0' }}>প্রথম ডিপোজিট ১০০% বোনাস</h4>
+              <p style={{ color: '#aaa', fontSize: '11px', margin: '0 0 8px 0' }}>প্রথমবার ডিপোজিট করলেই পাচ্ছেন আকর্ষনীয় ক্যাশব্যাক বোনাস!</p>
+              <button onClick={() => setActiveTab('deposit')} style={{ background: '#ffb800', color: '#000', border: 'none', padding: '5px 10px', borderRadius: '4px', fontWeight: 'bold', fontSize: '10px', cursor: 'pointer' }}>অংশগ্রহণ করুন</button>
+            </div>
+          </div>
         ) : activeTab === 'account' ? (
-          /* সদস্য সেন্টার / অ্যাকাউন্ট পেজ (যেমন ৩৩৯৭ নম্বর স্ক্রিনশটে আছে) */
+          /* সদস্য সেন্টার / অ্যাকাউন্ট পেজ */
           <div>
             <div style={{ background: 'linear-gradient(135deg, #2b374e, #182030)', padding: '15px', borderRadius: '10px', border: '1px solid #ffb800', marginBottom: '15px', textAlign: 'center' }}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px', marginBottom: '8px' }}>
@@ -201,8 +223,8 @@ export default function App() {
               </div>
               <div style={{ fontSize: '20px', fontWeight: 'bold', color: '#ffb800', margin: '10px 0' }}>৳ {balance.toFixed(2)}</div>
               <div style={{ display: 'flex', gap: '8px', justifyContent: 'center' }}>
-                <button onClick={() => setActiveTab('deposit')} style={{ background: '#ef4444', border: 'none', color: '#fff', padding: '6px 15px', borderRadius: '5px', fontSize: '11px', fontWeight: 'bold', cursor: 'pointer' }}>জমা দিন</button>
-                <button onClick={() => setActiveTab('withdraw')} style={{ background: '#3b82f6', border: 'none', color: '#fff', padding: '6px 15px', borderRadius: '5px', fontSize: '11px', fontWeight: 'bold', cursor: 'pointer' }}>উত্তোলন</button>
+                <button onClick={() => { setActiveTab('deposit'); setSubPage(null); }} style={{ background: '#ef4444', border: 'none', color: '#fff', padding: '6px 15px', borderRadius: '5px', fontSize: '11px', fontWeight: 'bold', cursor: 'pointer' }}>জমা দিন</button>
+                <button onClick={() => { setActiveTab('withdraw'); setSubPage(null); }} style={{ background: '#3b82f6', border: 'none', color: '#fff', padding: '6px 15px', borderRadius: '5px', fontSize: '11px', fontWeight: 'bold', cursor: 'pointer' }}>উত্তোলন</button>
               </div>
             </div>
 
@@ -222,7 +244,7 @@ export default function App() {
                 { name: 'রিবেট', icon: '💰' },
                 { name: 'কাউন্টার সার্ভিস', icon: '🎧' }
               ].map((item, idx) => (
-                <div key={idx} onClick={() => alert(`${item.name} সেকশনটি খোলা হয়েছে!`)} style={{ background: '#182030', padding: '10px 5px', borderRadius: '8px', border: '1px solid #222d42', cursor: 'pointer' }}>
+                <div key={idx} onClick={() => setSubPage(item.name)} style={{ background: '#182030', padding: '10px 5px', borderRadius: '8px', border: '1px solid #222d42', cursor: 'pointer' }}>
                   <div style={{ fontSize: '20px', marginBottom: '5px' }}>{item.icon}</div>
                   <span style={{ fontSize: '9px', color: '#ccc' }}>{item.name}</span>
                 </div>
@@ -231,7 +253,7 @@ export default function App() {
           </div>
         ) : (
           <div>
-            {/* VIP ব্যানার (যেমন ৩৩৯৬ নম্বর স্ক্রিনশটে আছে) */}
+            {/* VIP ব্যানার */}
             <div style={{ background: 'linear-gradient(135deg, #3b1c24, #182030)', padding: '15px', borderRadius: '10px', marginBottom: '12px', border: '1px solid #ff3366', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <div>
                 <span style={{ background: '#ff3366', color: '#fff', fontSize: '9px', padding: '2px 6px', borderRadius: '4px', fontWeight: 'bold' }}>VIP সুবিধা</span>
@@ -241,33 +263,33 @@ export default function App() {
               <div style={{ fontSize: '30px' }}>👑</div>
             </div>
 
-            {/* মাঝখানের শর্টকাট আইকন (ডিপোজিট, উত্তোলন, পুরস্কার, রিবেট) */}
+            {/* মাঝখানের শর্টকাট আইকন */}
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '8px', marginBottom: '15px', textAlign: 'center' }}>
-              <div onClick={() => setActiveTab('deposit')} style={{ background: '#182030', padding: '10px 5px', borderRadius: '8px', border: '1px solid #222d42', cursor: 'pointer' }}>
+              <div onClick={() => { setActiveTab('deposit'); setSubPage(null); }} style={{ background: '#182030', padding: '10px 5px', borderRadius: '8px', border: '1px solid #222d42', cursor: 'pointer' }}>
                 <div style={{ fontSize: '16px', color: '#22c55e' }}>💰</div>
                 <span style={{ fontSize: '10px', color: '#ccc' }}>ডিপোজিট</span>
               </div>
-              <div onClick={() => setActiveTab('withdraw')} style={{ background: '#182030', padding: '10px 5px', borderRadius: '8px', border: '1px solid #222d42', cursor: 'pointer' }}>
+              <div onClick={() => { setActiveTab('withdraw'); setSubPage(null); }} style={{ background: '#182030', padding: '10px 5px', borderRadius: '8px', border: '1px solid #222d42', cursor: 'pointer' }}>
                 <div style={{ fontSize: '16px', color: '#3b82f6' }}>💳</div>
                 <span style={{ fontSize: '10px', color: '#ccc' }}>উত্তোলন</span>
               </div>
-              <div onClick={() => setActiveTab('account')} style={{ background: '#182030', padding: '10px 5px', borderRadius: '8px', border: '1px solid #222d42', cursor: 'pointer' }}>
+              <div onClick={() => { setActiveTab('account'); setSubPage('পুরস্কার সেন্টার'); }} style={{ background: '#182030', padding: '10px 5px', borderRadius: '8px', border: '1px solid #222d42', cursor: 'pointer' }}>
                 <div style={{ fontSize: '16px', color: '#ffb800' }}>🏆</div>
                 <span style={{ fontSize: '10px', color: '#ccc' }}>পুরস্কার</span>
               </div>
-              <div onClick={() => setActiveTab('account')} style={{ background: '#182030', padding: '10px 5px', borderRadius: '8px', border: '1px solid #222d42', cursor: 'pointer' }}>
+              <div onClick={() => { setActiveTab('account'); setSubPage('রিবেট'); }} style={{ background: '#182030', padding: '10px 5px', borderRadius: '8px', border: '1px solid #222d42', cursor: 'pointer' }}>
                 <div style={{ fontSize: '16px', color: '#a855f7' }}>💵</div>
                 <span style={{ fontSize: '10px', color: '#ccc' }}>রিবেট</span>
               </div>
             </div>
 
-            {/* গেম ক্যাটাগরি ট্যাব (গরম, স্লট, লাইভ, পোকার, স্পোর্টস) */}
+            {/* গেম ক্যাটাগরি ট্যাব */}
             <div style={{ display: 'flex', justifyContent: 'space-between', background: '#182030', padding: '10px', borderRadius: '8px', marginBottom: '15px', border: '1px solid #222d42', textAlign: 'center' }}>
-              <div onClick={() => setActiveTab('home')} style={{ cursor: 'pointer', color: '#ff3366', fontSize: '11px', fontWeight: 'bold' }}>🔥 গরম</div>
-              <div onClick={() => setActiveTab('slot')} style={{ cursor: 'pointer', color: '#aaa', fontSize: '11px' }}>🎰 স্লট</div>
-              <div onClick={() => setActiveTab('home')} style={{ cursor: 'pointer', color: '#aaa', fontSize: '11px' }}>🎲 লাইভ</div>
-              <div onClick={() => setActiveTab('home')} style={{ cursor: 'pointer', color: '#aaa', fontSize: '11px' }}>♟️ পোকার</div>
-              <div onClick={() => setActiveTab('home')} style={{ cursor: 'pointer', color: '#aaa', fontSize: '11px' }}>🏏 স্পোর্টস</div>
+              <div onClick={() => { setActiveTab('home'); setSubPage(null); }} style={{ cursor: 'pointer', color: '#ff3366', fontSize: '11px', fontWeight: 'bold' }}>🔥 গরম</div>
+              <div onClick={() => { setActiveTab('slot'); setSubPage(null); }} style={{ cursor: 'pointer', color: '#aaa', fontSize: '11px' }}>🎰 স্লট</div>
+              <div onClick={() => { setActiveTab('home'); setSubPage(null); }} style={{ cursor: 'pointer', color: '#aaa', fontSize: '11px' }}>🎲 লাইভ</div>
+              <div onClick={() => { setActiveTab('home'); setSubPage(null); }} style={{ cursor: 'pointer', color: '#aaa', fontSize: '11px' }}>♟️ পোকার</div>
+              <div onClick={() => { setActiveTab('home'); setSubPage(null); }} style={{ cursor: 'pointer', color: '#aaa', fontSize: '11px' }}>🏏 স্পোর্টস</div>
             </div>
 
             {/* সার্চ বক্স */}
@@ -275,7 +297,7 @@ export default function App() {
               <input type="text" placeholder="গেম খুঁজুন..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} style={{ width: '100%', padding: '9px 12px', background: '#182030', color: '#fff', border: '1px solid #222d42', borderRadius: '8px', outline: 'none', fontSize: '12px' }} />
             </div>
 
-            {/* গেম গ্রিড (QQ77 স্টাইল কার্ড) */}
+            {/* গেম গ্রিড */}
             <h4 style={{ fontSize: '13px', color: '#ffb800', marginBottom: '8px' }}>🔥 গরম গেমস</h4>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '8px' }}>
               {hotGames.filter(g => g.name.toLowerCase().includes(searchQuery.toLowerCase())).map(game => (
@@ -291,25 +313,25 @@ export default function App() {
         )}
       </main>
 
-      {/* ফুটার নেভিগেশন বার (যেমন ৩৩৯৬ নম্বর স্ক্রিনশটের একদম নিচে আছে) */}
+      {/* ফুটার নেভিগেশন বার */}
       <nav style={{ position: 'fixed', bottom: 0, left: 0, right: 0, background: '#182030', borderTop: '1px solid #222d42', display: 'flex', justifyContent: 'space-around', padding: '8px 0', zIndex: 100, maxWidth: '480px', margin: '0 auto' }}>
-        <div onClick={() => { setActiveTab('home'); setSelectedGame(null); }} style={{ textAlign: 'center', cursor: 'pointer', color: activeTab === 'home' ? '#ff3366' : '#aaa' }}>
+        <div onClick={() => { setActiveTab('home'); setSelectedGame(null); setSubPage(null); }} style={{ textAlign: 'center', cursor: 'pointer', color: activeTab === 'home' && !subPage ? '#ff3366' : '#aaa' }}>
           <div style={{ fontSize: '16px' }}>🏠</div>
           <span style={{ fontSize: '9px' }}>হোম</span>
         </div>
-        <div onClick={() => { setActiveTab('deposit'); setSelectedGame(null); }} style={{ textAlign: 'center', cursor: 'pointer', color: activeTab === 'deposit' ? '#22c55e' : '#aaa' }}>
+        <div onClick={() => { setActiveTab('deposit'); setSelectedGame(null); setSubPage(null); }} style={{ textAlign: 'center', cursor: 'pointer', color: activeTab === 'deposit' ? '#22c55e' : '#aaa' }}>
           <div style={{ fontSize: '16px' }}>🤝</div>
           <span style={{ fontSize: '9px' }}>শেয়ার</span>
         </div>
-        <div onClick={() => { setActiveTab('home'); setSelectedGame(null); }} style={{ textAlign: 'center', cursor: 'pointer', color: '#ffb800' }}>
+        <div onClick={() => { setActiveTab('promotion'); setSelectedGame(null); setSubPage(null); }} style={{ textAlign: 'center', cursor: 'pointer', color: activeTab === 'promotion' ? '#ffb800' : '#aaa' }}>
           <div style={{ fontSize: '18px' }}>🎁</div>
           <span style={{ fontSize: '9px' }}>প্রমোশন</span>
         </div>
-        <div onClick={() => { setActiveTab('deposit'); setSelectedGame(null); }} style={{ textAlign: 'center', cursor: 'pointer', color: activeTab === 'deposit' ? '#22c55e' : '#aaa' }}>
+        <div onClick={() => { setActiveTab('deposit'); setSelectedGame(null); setSubPage(null); }} style={{ textAlign: 'center', cursor: 'pointer', color: activeTab === 'deposit' ? '#22c55e' : '#aaa' }}>
           <div style={{ fontSize: '16px' }}>💳</div>
           <span style={{ fontSize: '9px' }}>ডিপোজিট</span>
         </div>
-        <div onClick={() => { setActiveTab('account'); setSelectedGame(null); }} style={{ textAlign: 'center', cursor: 'pointer', color: activeTab === 'account' ? '#3b82f6' : '#aaa' }}>
+        <div onClick={() => { setActiveTab('account'); setSelectedGame(null); setSubPage(null); }} style={{ textAlign: 'center', cursor: 'pointer', color: activeTab === 'account' ? '#3b82f6' : '#aaa' }}>
           <div style={{ fontSize: '16px' }}>👤</div>
           <span style={{ fontSize: '9px' }}>সদস্যরা</span>
         </div>
