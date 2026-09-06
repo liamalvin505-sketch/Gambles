@@ -7,104 +7,37 @@ export default function App() {
   const [selectedGame, setSelectedGame] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
 
-  // ৫০টি সেরা কোম্পানির জনপ্রিয় গেমসমূহের বিশাল তালিকা
-  const games = [
-    // 1. JILI Games
-    { id: 1, name: 'Super Ace', provider: 'JILI', category: 'slot', url: 'https://democasino.pgsoft.com/games/slot/id/69' },
-    { id: 2, name: 'Fortune Gems', provider: 'JILI', category: 'slot', url: 'https://democasino.pgsoft.com/games/slot/id/74' },
-    { id: 3, name: 'Money Coming', provider: 'JILI', category: 'slot', url: 'https://democasino.pgsoft.com/games/slot/id/69' },
-    { id: 4, name: 'Golden Empire', provider: 'JILI', category: 'slot', url: 'https://democasino.pgsoft.com/games/slot/id/74' },
-    
-    // 2. PG Soft
-    { id: 5, name: 'Wild Bounty Showdown', provider: 'PG', category: 'slot', url: 'https://democasino.pgsoft.com/games/slot/id/74' },
-    { id: 6, name: 'Mahjong Ways 2', provider: 'PG', category: 'slot', url: 'https://democasino.pgsoft.com/games/slot/id/74' },
-    { id: 7, name: 'Treasures of Aztec', provider: 'PG', category: 'slot', url: 'https://democasino.pgsoft.com/games/slot/id/69' },
-    { id: 8, name: 'Lucky Neko', provider: 'PG', category: 'slot', url: 'https://democasino.pgsoft.com/games/slot/id/74' },
+  // প্রতিটি প্রোভাইডারের জন্য বিশাল গেম জেনারেটর লিস্ট
+  const generateCompanyGames = (providerName, count) => {
+    const sampleNames = ['Slot', 'Bonanza', 'Gold', 'Fortune', 'Mega', 'Wild', 'Super', 'Crazy', 'Royal', 'Magic', 'Empire', 'Ways', 'Wins', 'Treasure', '777', 'Fruit', 'Book', 'Princess', 'Ace', 'Joker'];
+    let list = [];
+    for (let i = 1; i <= count; i++) {
+      let randomWord = sampleNames[i % sampleNames.length];
+      list.push({
+        id: `${providerName}-${i}`,
+        name: `${providerName} ${randomWord} ${i}`,
+        provider: providerName,
+        category: 'slot',
+        url: 'https://democasino.pgsoft.com/games/slot/id/69'
+      });
+    }
+    return list;
+  };
 
-    // 3. Pragmatic Play
-    { id: 9, name: 'Gates of Olympus', provider: 'PRAGMATIC', category: 'slot', url: 'https://democasino.pgsoft.com/games/slot/id/69' },
-    { id: 10, name: 'Sweet Bonanza', provider: 'PRAGMATIC', category: 'slot', url: 'https://democasino.pgsoft.com/games/slot/id/74' },
-    { id: 11, name: 'Starlight Princess', provider: 'PRAGMATIC', category: 'slot', url: 'https://democasino.pgsoft.com/games/slot/id/69' },
-
-    // 4. Evolution Gaming
-    { id: 12, name: 'Live Roulette', provider: 'EVO', category: 'live', url: 'https://casino.delawartest.com/iframe-roulette' },
-    { id: 13, name: 'Baccarat Live', provider: 'EVO', category: 'live', url: 'https://casino.delawartest.com/iframe-roulette' },
-    { id: 14, name: 'Crazy Time', provider: 'EVO', category: 'live', url: 'https://casino.delawartest.com/iframe-roulette' },
-
-    // 5. Spribe
-    { id: 15, name: 'Aviator', provider: 'SPRIBE', category: 'crash', url: 'https://demo.spribe.co/launch/aviator' },
-    { id: 16, name: 'Spaceman', provider: 'SPRIBE', category: 'crash', url: 'https://demo.spribe.co/launch/aviator' },
-
-    // 6. Microgaming (Games Global)
-    { id: 17, name: 'Mega Moolah', provider: 'MICROGAMING', category: 'slot', url: 'https://democasino.pgsoft.com/games/slot/id/69' },
-    { id: 18, name: 'Immortal Romance', provider: 'MICROGAMING', category: 'slot', url: 'https://democasino.pgsoft.com/games/slot/id/74' },
-
-    // 7. NetEnt
-    { id: 19, name: 'Starburst', provider: 'NETENT', category: 'slot', url: 'https://democasino.pgsoft.com/games/slot/id/69' },
-    { id: 20, name: 'Gonzo\'s Quest', provider: 'NETENT', category: 'slot', url: 'https://democasino.pgsoft.com/games/slot/id/74' },
-
-    // 8. Play'n GO
-    { id: 21, name: 'Book of Dead', provider: 'PLAYNGO', category: 'slot', url: 'https://democasino.pgsoft.com/games/slot/id/69' },
-    { id: 22, name: 'Reactoonz', provider: 'PLAYNGO', category: 'slot', url: 'https://democasino.pgsoft.com/games/slot/id/74' },
-
-    // 9. Red Tiger
-    { id: 23, name: 'Gonita\'s Gold', provider: 'REDTIGER', category: 'slot', url: 'https://democasino.pgsoft.com/games/slot/id/69' },
-    { id: 24, name: 'Dragon\'s Fire', provider: 'REDTIGER', category: 'slot', url: 'https://democasino.pgsoft.com/games/slot/id/74' },
-
-    // 10. Habanero
-    { id: 25, name: 'Hot Hot Fruit', provider: 'HABANERO', category: 'slot', url: 'https://democasino.pgsoft.com/games/slot/id/69' },
-    { id: 26, name: 'Fa Cai Shen', provider: 'HABANERO', category: 'slot', url: 'https://democasino.pgsoft.com/games/slot/id/74' },
-
-    // 11. CQ9 Gaming
-    { id: 27, name: 'Jump High', provider: 'CQ9', category: 'slot', url: 'https://democasino.pgsoft.com/games/slot/id/69' },
-    { id: 28, name: 'Thor II', provider: 'CQ9', category: 'slot', url: 'https://democasino.pgsoft.com/games/slot/id/74' },
-
-    // 12. JDB Gaming
-    { id: 29, name: 'Open Sesame', provider: 'JDB', category: 'slot', url: 'https://democasino.pgsoft.com/games/slot/id/69' },
-    { id: 30, name: 'Kong', provider: 'JDB', category: 'slot', url: 'https://democasino.pgsoft.com/games/slot/id/74' },
-
-    // 13. Spadegaming
-    { id: 31, name: 'Fishing God', provider: 'SPADE', category: 'slot', url: 'https://democasino.pgsoft.com/games/slot/id/69' },
-    { id: 32, name: 'Cai Shen 888', provider: 'SPADE', category: 'slot', url: 'https://democasino.pgsoft.com/games/slot/id/74' },
-
-    // 14. NoLimit City
-    { id: 33, name: 'Mental', provider: 'NOLIMIT', category: 'slot', url: 'https://democasino.pgsoft.com/games/slot/id/69' },
-    { id: 34, name: 'San Quentin', provider: 'NOLIMIT', category: 'slot', url: 'https://democasino.pgsoft.com/games/slot/id/74' },
-
-    // 15. Hacksaw Gaming
-    { id: 35, name: 'Wanted Dead or a Wild', provider: 'HACKSAW', category: 'slot', url: 'https://democasino.pgsoft.com/games/slot/id/69' },
-    { id: 36, name: 'Chaos Crew', provider: 'HACKSAW', category: 'slot', url: 'https://democasino.pgsoft.com/games/slot/id/74' },
-
-    // 16. Push Gaming
-    { id: 37, name: 'Jammin\' Jars', provider: 'PUSH', category: 'slot', url: 'https://democasino.pgsoft.com/games/slot/id/69' },
-    { id: 38, name: 'Razor Shark', provider: 'PUSH', category: 'slot', url: 'https://democasino.pgsoft.com/games/slot/id/74' },
-
-    // 17. Relax Gaming
-    { id: 39, name: 'Money Train 3', provider: 'RELAX', category: 'slot', url: 'https://democasino.pgsoft.com/games/slot/id/69' },
-    { id: 40, name: 'Temple Tumble', provider: 'RELAX', category: 'slot', url: 'https://democasino.pgsoft.com/games/slot/id/74' },
-
-    // 18. Yggdrasil
-    { id: 41, name: 'Valley of the Gods', provider: 'YGGDRASIL', category: 'slot', url: 'https://democasino.pgsoft.com/games/slot/id/69' },
-    { id: 42, name: 'Holmes and the Stolen Stones', provider: 'YGGDRASIL', category: 'slot', url: 'https://democasino.pgsoft.com/games/slot/id/74' },
-
-    // 19. Quickspin
-    { id: 43, name: 'Big Bad Wolf', provider: 'QUICKSPIN', category: 'slot', url: 'https://democasino.pgsoft.com/games/slot/id/69' },
-    { id: 44, name: 'Sakura Fortune', provider: 'QUICKSPIN', category: 'slot', url: 'https://democasino.pgsoft.com/games/slot/id/74' },
-
-    // 20. Playson
-    { id: 45, name: 'Solar Queen', provider: 'PLAYSON', category: 'slot', url: 'https://democasino.pgsoft.com/games/slot/id/69' },
-    { id: 46, name: 'Buffalo Power', provider: 'PLAYSON', category: 'slot', url: 'https://democasino.pgsoft.com/games/slot/id/74' },
-
-    // 21-50 অন্যান্য জনপ্রিয় প্রোভাইডারসমূহ (Booongo, Betsoft, Wazdan, Evoplay ইত্যাদি)
-    { id: 47, name: 'Book of Sun', provider: 'BOOONGO', category: 'slot', url: 'https://democasino.pgsoft.com/games/slot/id/69' },
-    { id: 48, name: 'Good Girl Bad Girl', provider: 'BETSOFT', category: 'slot', url: 'https://democasino.pgsoft.com/games/slot/id/74' },
-    { id: 49, name: 'Sizzling 777', provider: 'WAZDAN', category: 'slot', url: 'https://democasino.pgsoft.com/games/slot/id/69' },
-    { id: 50, name: 'Fruit Super Nova', provider: 'EVOPLAY', category: 'slot', url: 'https://democasino.pgsoft.com/games/slot/id/74' },
-    { id: 51, name: 'Rise of Egypt', provider: 'PLAYSON', category: 'slot', url: 'https://democasino.pgsoft.com/games/slot/id/69' },
-    { id: 52, name: 'Baccarat Deluxe', provider: 'PG', category: 'live', url: 'https://casino.delawartest.com/iframe-roulette' },
-    { id: 53, name: 'Andar Bahar Live', provider: 'EVO', category: 'live', url: 'https://casino.delawartest.com/iframe-roulette' },
-    { id: 54, name: 'Dragon Tiger Live', provider: 'EVO', category: 'live', url: 'https://casino.delawartest.com/iframe-roulette' }
+  // ৫০টি কোম্পানির সব গেম একসাথে লোড করার অ্যারে
+  const allProviders = [
+    'JILI', 'PG', 'PRAGMATIC', 'EVO', 'SPRIBE', 'MICROGAMING', 'NETENT', 'PLAYNGO', 'REDTIGER', 'HABANERO',
+    'CQ9', 'JDB', 'SPADE', 'NOLIMIT', 'HACKSAW', 'PUSH', 'RELAX', 'YGGDRASIL', 'QUICKSPIN', 'PLAYSON',
+    'BOOONGO', 'BETSOFT', 'WAZDAN', 'EVOPLAY', 'FAZI', 'GAMZIX', 'SLOTMILL', 'KALAMBA', 'RAMON', 'REELPLAY',
+    'SLINGO', 'TPG', 'FUNKY', 'V8', 'RICH88', 'KINGMAKER', 'MANNAPLAY', 'ADVANTPLAY', 'BTI', 'SABA',
+    'CMD368', 'UG', 'AESEXY', 'DREAM', 'AG', 'ALLBET', 'WM', 'EZUGI', 'VIVO', 'BETGAMES'
   ];
+
+  // প্রতিটি কোম্পানির আন্ডারে ৩০-৫০টি করে গেম অটো জেনারেট হবে
+  let games = [];
+  allProviders.forEach(prov => {
+    games = games.concat(generateCompanyGames(prov, 35));
+  });
 
   const filteredGames = games.filter(game => {
     const matchesProvider = activeProvider === 'all' || game.provider === activeProvider;
@@ -115,7 +48,7 @@ export default function App() {
   return (
     <div style={{ background: '#0f1423', color: '#fff', minHeight: '100vh', fontFamily: 'Arial, sans-serif', paddingBottom: '70px' }}>
       
-      {/* টপ হেডার (LA94.COM) */}
+      {/* টপ হেডার */}
       <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 15px', background: '#1a2238', borderBottom: '1px solid #2a3655' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
           <span style={{ fontSize: '20px', fontWeight: 'bold', color: '#ffcc00', fontStyle: 'italic' }}>LA94<span style={{color: '#fff', fontSize: '12px'}}>.COM</span></span>
@@ -211,8 +144,15 @@ export default function App() {
               />
             </div>
 
-            <div style={{ display: 'flex', gap: '8px', marginBottom: '15px', overflowX: 'auto' }}>
-              {['all', 'JILI', 'PG', 'PRAGMATIC', 'EVO', 'SPRIBE', 'MICROGAMING', 'NETENT', 'PLAYNGO', 'HABANERO', 'HACKSAW'].map(provider => (
+            {/* ৫০টি কোম্পানির ফিল্টার বাটন লিস্ট */}
+            <div style={{ display: 'flex', gap: '8px', marginBottom: '15px', overflowX: 'auto', paddingBottom: '5px' }}>
+              <button 
+                onClick={() => setActiveProvider('all')}
+                style={{ background: activeProvider === 'all' ? '#3b82f6' : '#1a2238', color: '#fff', border: '1px solid #2a3655', padding: '6px 15px', borderRadius: '6px', cursor: 'pointer', fontSize: '12px', fontWeight: 'bold', whiteSpace: 'nowrap' }}
+              >
+                all
+              </button>
+              {allProviders.map(provider => (
                 <button 
                   key={provider}
                   onClick={() => setActiveProvider(provider)}
