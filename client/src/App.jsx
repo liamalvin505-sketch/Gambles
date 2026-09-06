@@ -7,12 +7,11 @@ export default function App() {
     return saved !== null ? parseFloat(saved) : 0.00;
   });
 
-  const [activeTab, setActiveTab] = useState('home'); // home, deposit, account, withdraw
+  const [activeTab, setActiveTab] = useState('home'); 
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedProvider, setSelectedProvider] = useState('All');
   const [subPage, setSubPage] = useState(null);
 
-  // ডিপোজিট স্টেপ ও রিকোয়েস্ট ম্যানেজমেন্ট
   const [depositMethod, setDepositMethod] = useState('Bkash');
   const [depositChannel, setDepositChannel] = useState('চ্যানেল 80');
   const [depositAmount, setDepositAmount] = useState('500');
@@ -36,7 +35,6 @@ export default function App() {
     localStorage.setItem('la94_pending', JSON.stringify(pendingDeposits));
   }, [pendingDeposits]);
 
-  // উইনিং ফেক নোটিফিকেশন টিকার
   useEffect(() => {
     const names = ['Rahim***', 'Karim***', 'Hasan***', 'Ripon***', 'Aminul***', 'Sojib***', 'Tanvir***'];
     const games = ['Aviator', 'Super Ace', 'Wild Bounty', 'Fortune Gems', 'Gates of Olympus', 'Sweet Bonanza'];
@@ -52,7 +50,6 @@ export default function App() {
     return () => clearInterval(interval);
   }, []);
 
-  // প্রোভাইডার লিস্ট
   const providers = [
     'All', 'Jili', 'Pocket Games Soft', 'BNG', 'JDB', 'FA CHAI Gaming', 
     'BTGaming', 'Naga Games', 'KA Gaming', 'PLAYSTAR', 'Askmeslot', 'Victory Ark',
@@ -63,7 +60,6 @@ export default function App() {
     'Relax Gaming', '5G', 'Smartsoft', 'No Limit City', 'Spribe', 'Joker', 'PP', 'KingMidas', 'Aviator', 'InOut'
   ];
 
-  // গেম ডাটাবেস ও আসল খেলার লিংক (আপনার ইচ্ছামমতো লিংক এখানে পরিবর্তন করতে পারবেন)
   const generateMassiveGames = () => {
     const baseNames = [
       { name: 'Aviator', prov: 'Spribe', url: 'https://spribe.co/games/aviator' },
@@ -90,7 +86,7 @@ export default function App() {
             id: `g_${idCounter++}`,
             name: `${prov} Slot ${i}`,
             prov: prov,
-            url: 'https://www.google.com' // দরকারমতো আসল গেমের লিংক এখানে বসাতে পারেন
+            url: 'https://www.google.com'
           });
         }
       }
@@ -101,7 +97,6 @@ export default function App() {
 
   const [allGamesList] = useState(generateMassiveGames());
 
-  // ডিপোজিট ফাইনাল সাবমিট
   const handleFinalDepositSubmit = (e) => {
     e.preventDefault();
     if (!trxId || trxId.length < 5) {
@@ -206,7 +201,6 @@ export default function App() {
     );
   };
 
-  // ফিল্টার্ড গেমস
   const filteredGames = allGamesList.filter(game => {
     const matchesSearch = game.name.toLowerCase().includes(searchQuery.toLowerCase()) || game.prov.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesProv = selectedProvider === 'All' || game.prov.toLowerCase() === selectedProvider.toLowerCase();
@@ -216,14 +210,12 @@ export default function App() {
   return (
     <div style={{ background: '#121824', color: '#fff', minHeight: '100vh', fontFamily: 'Arial, sans-serif', paddingBottom: '70px', maxWidth: '480px', margin: '0 auto', position: 'relative' }}>
       
-      {/* টপ হেডার */}
       <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 15px', background: '#182030', borderBottom: '1px solid #222d42', position: 'sticky', top: 0, zIndex: 100 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
           <span onClick={() => setDrawerOpen(true)} style={{ fontSize: '22px', cursor: 'pointer', color: '#fff' }}>☰</span>
           <span style={{ fontSize: '20px', fontWeight: '900', color: '#ffb800', fontStyle: 'italic', letterSpacing: '1px' }}>LA94<span style={{color: '#fff', fontSize: '11px'}}>.COM</span></span>
         </div>
         
-        {/* লগইন / নিবন্ধন বাটন */}
         <button onClick={() => setIsAuthOpen(true)} style={{ background: '#2563eb', color: '#fff', border: 'none', padding: '5px 10px', borderRadius: '4px', fontSize: '11px', fontWeight: 'bold', cursor: 'pointer' }}>
           লগইন / নিবন্ধন
         </button>
@@ -237,7 +229,6 @@ export default function App() {
         </div>
       </header>
 
-      {/* সাইড মেনু */}
       {drawerOpen && (
         <div style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', background: 'rgba(0,0,0,0.7)', zIndex: 2000, display: 'flex' }}>
           <div style={{ width: '280px', background: '#182030', height: '100%', padding: '15px', display: 'flex', flexDirection: 'column', gap: '15px' }}>
@@ -266,12 +257,10 @@ export default function App() {
         </div>
       )}
 
-      {/* নোটিফিকেশন টিকার */}
       <div style={{ background: '#1e293b', color: '#ffcc00', padding: '6px 12px', fontSize: '11px', borderBottom: '1px solid #283548', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
         📢 <span>{winAlert}</span>
       </div>
 
-      {/* মেইন বডি */}
       <main style={{ padding: '10px' }}>
         {activeTab === 'deposit' ? (
           <div style={{ background: '#182030', padding: '15px', borderRadius: '10px', border: '1px solid #222d42' }}>
@@ -279,7 +268,6 @@ export default function App() {
 
             {depositStep === 1 ? (
               <div>
-                {/* আমানতের মোড */}
                 <div style={{ marginBottom: '15px' }}>
                   <label style={{ fontSize: '11px', color: '#aaa', display: 'block', marginBottom: '8px' }}>আমানতের মোড</label>
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '8px' }}>
@@ -291,7 +279,6 @@ export default function App() {
                   </div>
                 </div>
 
-                {/* পেমেন্ট চ্যানেল সিলেকশন */}
                 <div style={{ marginBottom: '15px' }}>
                   <label style={{ fontSize: '11px', color: '#aaa', display: 'block', marginBottom: '8px' }}>পেমেন্ট চ্যানেল</label>
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '8px' }}>
@@ -303,7 +290,6 @@ export default function App() {
                   </div>
                 </div>
 
-                {/* জমা পরিমাণ */}
                 <div style={{ marginBottom: '15px' }}>
                   <label style={{ fontSize: '11px', color: '#aaa', display: 'block', marginBottom: '8px' }}>জমা পরিমাণ</label>
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '8px', marginBottom: '10px' }}>
@@ -404,12 +390,10 @@ export default function App() {
               <div style={{ fontSize: '30px' }}>👑</div>
             </div>
 
-            {/* সার্চ */}
             <div style={{ marginBottom: '12px' }}>
               <input type="text" placeholder="৩০০+ গেম বা প্রোভাইডার খুঁজুন..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} style={{ width: '100%', padding: '10px 12px', background: '#182030', color: '#fff', border: '1px solid #ffb800', borderRadius: '8px', outline: 'none', fontSize: '12px' }} />
             </div>
 
-            {/* প্রোভাইডার পিল বাটন লিস্ট */}
             <div style={{ display: 'flex', gap: '6px', overflowX: 'auto', paddingBottom: '10px', marginBottom: '12px', scrollbarWidth: 'none' }}>
               {providers.map((prov) => (
                 <button key={prov} onClick={() => setSelectedProvider(prov)} style={{ background: selectedProvider === prov ? '#ffb800' : '#182030', color: selectedProvider === prov ? '#000' : '#fff', border: '1px solid #222d42', padding: '6px 14px', borderRadius: '20px', fontSize: '11px', whiteSpace: 'nowrap', cursor: 'pointer', fontWeight: selectedProvider === prov ? 'bold' : 'normal' }}>
@@ -418,7 +402,6 @@ export default function App() {
               ))}
             </div>
 
-            {/* গেম লিস্ট - এখন ক্লিক করলে নতুন ট্যাবে ওপেন হবে */}
             <h4 style={{ fontSize: '13px', color: '#ffb800', marginBottom: '8px' }}>🔥 জনপ্রিয় ক্যাসিনো গেমস ({filteredGames.length})</h4>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '8px' }}>
               {filteredGames.map(game => (
@@ -434,7 +417,6 @@ export default function App() {
         )}
       </main>
 
-      {/* ফুটার নেভিগেশন */}
       <nav style={{ position: 'fixed', bottom: 0, left: 0, right: 0, background: '#182030', borderTop: '1px solid #222d42', display: 'flex', justifyContent: 'space-around', padding: '8px 0', zIndex: 100, maxWidth: '480px', margin: '0 auto' }}>
         <div onClick={() => { setActiveTab('home'); setSubPage(null); }} style={{ textAlign: 'center', cursor: 'pointer', color: activeTab === 'home' ? '#ff3366' : '#aaa' }}>
           <div style={{ fontSize: '16px' }}>🏠</div>
@@ -449,7 +431,7 @@ export default function App() {
           <span style={{ fontSize: '9px' }}>প্রমোশন</span>
         </div>
         <div onClick={() => { setActiveTab('deposit'); setSubPage(null); }} style={{ textAlign: 'center', cursor: 'pointer', color: activeTab === 'deposit' ? '#22c55e' : '#aaa' }}>
-          <div style={{ fontSize: '16px' => 16 }}>💳</div>
+          <div style={{ fontSize: '16px' }}>💳</div>
           <span style={{ fontSize: '9px' }}>ডিপোজিট</span>
         </div>
         <div onClick={() => { setActiveTab('account'); setSubPage(null); }} style={{ textAlign: 'center', cursor: 'pointer', color: activeTab === 'account' ? '#3b82f6' : '#aaa' }}>
@@ -458,7 +440,6 @@ export default function App() {
         </div>
       </nav>
 
-      {/* অথেনটিকেশন মডাল */}
       <AuthModal isOpen={isAuthOpen} onClose={() => setIsAuthOpen(false)} />
 
     </div>
