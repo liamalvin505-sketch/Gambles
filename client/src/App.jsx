@@ -6,6 +6,11 @@ export default function App() {
     return saved !== null ? parseFloat(saved) : 0;
   });
 
+  const [totalDeposited, setTotalDeposited] = useState(() => {
+    const saved = localStorage.getItem('la94_total_deposited');
+    return saved !== null ? parseFloat(saved) : 0;
+  });
+
   const [depositHistory, setDepositHistory] = useState(() => {
     const saved = localStorage.getItem('la94_deposits');
     return saved ? JSON.parse(saved) : [];
@@ -19,7 +24,6 @@ export default function App() {
   const [activeTab, setActiveTab] = useState('home'); 
   const [subPage, setSubPage] = useState(null); 
   const [selectedGame, setSelectedGame] = useState(null);
-  const [searchQuery, setSearchQuery] = useState('');
   
   const [depositAmount, setDepositAmount] = useState('');
   const [trxId, setTrxId] = useState('');
@@ -34,9 +38,24 @@ export default function App() {
   ]);
   const [chatInput, setChatInput] = useState('');
 
+  // অরিজিনাল সাইটের মতো মোট ডিপোজিটের উপর ভিত্তি করে VIP লেভেল ক্যালকুলেশন
+  const getVipLevel = (deposited) => {
+    if (deposited >= 50000) return 'VIP4';
+    if (deposited >= 20000) return 'VIP3';
+    if (deposited >= 5000) return 'VIP2';
+    if (deposited >= 1000) return 'VIP1';
+    return 'VIP0';
+  };
+
+  const currentVip = getVipLevel(totalDeposited);
+
   useEffect(() => {
     localStorage.setItem('la94_balance', balance);
   }, [balance]);
+
+  useEffect(() => {
+    localStorage.setItem('la94_total_deposited', totalDeposited);
+  }, [totalDeposited]);
 
   useEffect(() => {
     localStorage.setItem('la94_deposits', JSON.stringify(depositHistory));
@@ -78,6 +97,8 @@ export default function App() {
       return;
     }
     setBalance(prev => prev + amount);
+    setTotalDeposited(prev => prev + amount); // মোট ডিপোজিট আপডেট হবে যা VIP লেভেল বাড়াবে
+    
     const newDeposit = {
       id: Date.now(),
       amount: amount,
@@ -176,7 +197,7 @@ export default function App() {
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                 <div style={{ width: '35px', height: '35px', background: '#333', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>👤</div>
                 <div>
-                  <div style={{ fontSize: '12px', color: '#aaa' }}>স্বাগত</div>
+                  <div style={{ fontSize: '12px', color: '#aaa' }}>স্বাগত ({currentVip})</div>
                   <div style={{ fontSize: '13px', fontWeight: 'bold', color: '#ffb800' }}>liamalvin</div>
                 </div>
               </div>
@@ -362,7 +383,7 @@ export default function App() {
                 <div style={{ width: '45px', height: '45px', background: '#444', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '20px' }}>👨‍💼</div>
                 <div style={{ textAlign: 'left' }}>
                   <div style={{ fontSize: '14px', fontWeight: 'bold', color: '#fff' }}>liamalvin</div>
-                  <span style={{ background: '#ffb800', color: '#000', fontSize: '10px', padding: '1px 6px', borderRadius: '4px', fontWeight: 'bold' }}>VIP4</span>
+                  <span style={{ background: currentVip === 'VIP0' ? '#555' : '#ffb800', color: currentVip === 'VIP0' ? '#fff' : '#000', fontSize: '10px', padding: '1px 6px', borderRadius: '4px', fontWeight: 'bold' }}>{currentVip}</span>
                 </div>
               </div>
               <div style={{ fontSize: '20px', fontWeight: 'bold', color: '#ffb800', margin: '10px 0' }}>৳ {balance.toFixed(2)}</div>
@@ -372,7 +393,7 @@ export default function App() {
               </div>
             </div>
 
-            {/* সদস্য সেন্টার গ্রিড - প্রতিটি বাটন এখন আসল পেজে নিয়ে যাবে */}
+            {/* সদস্য সেন্টার গ্রিড */}
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '10px', textAlign: 'center' }}>
               <div onClick={() => setSubPage('rewards')} style={{ background: '#182030', padding: '10px 5px', borderRadius: '8px', border: '1px solid #222d42', cursor: 'pointer' }}>
                 <div style={{ fontSize: '20px', marginBottom: '5px' }}>🏆</div>
@@ -428,7 +449,7 @@ export default function App() {
           <div>
             <div style={{ background: 'linear-gradient(135deg, #3b1c24, #182030)', padding: '15px', borderRadius: '10px', marginBottom: '12px', border: '1px solid #ff3366', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <div>
-                <span style={{ background: '#ff3366', color: '#fff', fontSize: '9px', padding: '2px 6px', borderRadius: '4px', fontWeight: 'bold' }}>VIP সুবিধা</span>
+                <span style={{ background: '#ff3366', color: '#fff', fontSize: '9px', padding: '2px 6px', borderRadius: '4px', fontWeight: 'bold' }}>{currentVip} সুবিধা</span>
                 <h3 style={{ color: '#ffb800', fontSize: '14px', margin: '5px 0' }}>প্রচার বোনাস: ৳ ২০,০০,০০০</h3>
                 <p style={{ color: '#aaa', fontSize: '10px', margin: 0 }}>সাপ্তাহিক বেতন: ৳ ৪,০০,০০০</p>
               </div>
@@ -439,7 +460,7 @@ export default function App() {
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                 <div style={{ width: '40px', height: '40px', background: '#333', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>👤</div>
                 <div>
-                  <div style={{ fontSize: '12px', color: '#aaa' }}>স্বাগতম</div>
+                  <div style={{ fontSize: '12px', color: '#aaa' }}>স্বাগত ({currentVip})</div>
                   <div style={{ fontSize: '13px', fontWeight: 'bold', color: '#ffb800' }}>liamalvin</div>
                 </div>
               </div>
@@ -464,7 +485,7 @@ export default function App() {
         )}
       </main>
 
-      {/* রিয়েল লাইভ চ্যাট উইন্ডো (কাউন্টার সার্ভিস / কাস্টমার সাপোর্ট) */}
+      {/* রিয়েল লাইভ চ্যাট উইন্ডো */}
       {chatOpen && (
         <div style={{ position: 'fixed', bottom: '70px', right: '15px', width: '300px', height: '380px', background: '#182030', border: '1px solid #ffb800', borderRadius: '10px', zIndex: 3000, display: 'flex', flexDirection: 'column', boxShadow: '0 4px 15px rgba(0,0,0,0.5)' }}>
           <div style={{ background: '#111622', padding: '10px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTopLeftRadius: '10px', borderTopRightRadius: '10px', borderBottom: '1px solid #222d42' }}>
@@ -491,7 +512,7 @@ export default function App() {
           <div style={{ fontSize: '16px' }}>🏠</div>
           <span style={{ fontSize: '9px' }}>হোম</span>
         </div>
-        <div onClick={() => { setSubPage('invite'); setActiveTab('home'); setSelectedGame(null); }} style={{ textAlign: 'center', cursor: 'pointer', color: '#aaa' }}>
+        <div onClick={() => { setSubPage('invite'); setActiveTab('home'); setSelectedGame(null); }} style={{ textAlign: 'center', cursor: 'pointer', color: '#aaa' => c }}>
           <div style={{ fontSize: '16px' }}>🤝</div>
           <span style={{ fontSize: '9px' }}>শেয়ার</span>
         </div>
