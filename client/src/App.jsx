@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import AuthModal from './components/AuthModal';
+
 export default function App() {
   const [balance, setBalance] = useState(() => {
     const saved = localStorage.getItem('la94_balance');
@@ -23,7 +24,8 @@ export default function App() {
     return saved ? JSON.parse(saved) : [];
   });
 
-  const [withdrawAmount, setWithdrawAmount] = useState('');const [isAuthOpen, setIsAuthOpen] = useState(false);
+  const [withdrawAmount, setWithdrawAmount] = useState('');
+  const [isAuthOpen, setIsAuthOpen] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [winAlert, setWinAlert] = useState('স্বাগতম LA94.COM-এ! ডিপোজিট করে খেলা শুরু করুন।');
 
@@ -222,6 +224,12 @@ export default function App() {
           <span onClick={() => setDrawerOpen(true)} style={{ fontSize: '22px', cursor: 'pointer', color: '#fff' }}>☰</span>
           <span style={{ fontSize: '20px', fontWeight: '900', color: '#ffb800', fontStyle: 'italic', letterSpacing: '1px' }}>LA94<span style={{color: '#fff', fontSize: '11px'}}>.COM</span></span>
         </div>
+        
+        {/* লগইন / নিবন্ধন বাটন */}
+        <button onClick={() => setIsAuthOpen(true)} style={{ background: '#2563eb', color: '#fff', border: 'none', padding: '5px 10px', borderRadius: '4px', fontSize: '11px', fontWeight: 'bold', cursor: 'pointer' }}>
+          লগইন / নিবন্ধন
+        </button>
+
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
           <div style={{ background: '#0e131f', padding: '4px 10px', borderRadius: '20px', border: '1px solid #ffb800' }}>
             <span style={{ fontSize: '11px', color: '#ffb800' }}>৳ </span>
@@ -463,6 +471,9 @@ export default function App() {
           <span style={{ fontSize: '9px' }}>সদস্যরা</span>
         </div>
       </nav>
+
+      {/* অথেনটিকেশন মডাল (AuthModal) */}
+      <AuthModal isOpen={isAuthOpen} onClose={() => setIsAuthOpen(false)} />
 
     </div>
   );
