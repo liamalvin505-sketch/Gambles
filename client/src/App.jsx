@@ -1,34 +1,35 @@
 import React, { useState, useEffect } from 'react';
 
 export default function App() {
-  // লোকাল স্টোরেজ থেকে ব্যালেন্স লোড করা যাতে রিলোড দিলে মুছে না যায়
   const [balance, setBalance] = useState(() => {
     const saved = localStorage.getItem('la94_balance');
-    return saved !== null ? parseFloat(saved) : 0;
+    return saved !== null ? parseFloat(saved) : 5.15;
   });
 
-  const [activeTab, setActiveTab] = useState('hot');
+  const [activeTab, setActiveTab] = useState('home'); // home, slot, deposit, account, withdraw
   const [activeProvider, setActiveProvider] = useState('all');
   const [selectedGame, setSelectedGame] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
   
-  // ডিপোজিট স্টেট
+  // ডিপোজিট ও উইথড্র স্টেট
   const [depositAmount, setDepositAmount] = useState('');
   const [trxId, setTrxId] = useState('');
+  const [withdrawAmount, setWithdrawAmount] = useState('');
 
-  // লাইভ উইনিং নোটিফিকেশন স্টেট
-  const [winAlert, setWinAlert] = useState('ยินดีต้อนรับสู่ LA94.COM - 🌟 Selamat datang!');
+  // সাইড মেনু ড্রয়ার স্টেট
+  const [drawerOpen, setDrawerOpen] = useState(false);
 
-  // ব্যালেন্স সেভ করার ইফেক্ট
+  // লাইভ নোটিফিকেশন
+  const [winAlert, setWinAlert] = useState('স্বাগতম LA94.COM-এ! ফাস্ট ডিপোজিট করুন এবং খেলুন।');
+
   useEffect(() => {
     localStorage.setItem('la94_balance', balance);
   }, [balance]);
 
-  // ফেক লাইভ উইনিং নোটিফিকেশন জেনারেটর
   useEffect(() => {
-    const names = ['Rahim***', 'Karim***', 'Hasan***', 'Ripon***', 'Aminul***', 'Sojib***', 'Nasir***'];
-    const games = ['Aviator', 'Super Ace', 'Wild Bounty', 'Fortune Gems', 'Boxing King'];
-    const amounts = [500, 1200, 2500, 5000, 10000, 350];
+    const names = ['Rahim***', 'Karim***', 'Hasan***', 'Ripon***', 'Aminul***', 'Sojib***'];
+    const games = ['Aviator', 'Super Ace', 'Wild Bounty', 'Fortune Gems'];
+    const amounts = [500, 1200, 2500, 5000, 10000];
 
     const interval = setInterval(() => {
       const randomName = names[Math.floor(Math.random() * names.length)];
@@ -40,215 +41,249 @@ export default function App() {
     return () => clearInterval(interval);
   }, []);
 
-  // প্রোভাইডার তালিকা
   const allProviders = [
     'Jili', 'Pocket Games Soft', 'BNG', 'JDB', 'FA CHAI Gaming', 
     'BTGaming', 'Naga Games', 'KA Gaming', 'PLAYSTAR', 'Askmeslot', 
-    'Victory Ark', 'First Person', 'Fastspin', 'Evoplay', 'MAHA Gaming', 
-    'Micro Gaming', 'Gemini', 'AVATAR UX', 'YELLOW BAT', 'Baison Poker', 
-    'Ameba Entertainment', 'FunTa Gaming', 'BGaming', 'Red Tiger', 'Wazdan', 
-    'Octoplay', 'Spadegaming', 'NetEnt', 'MAS', 'Big Time Gaming', 
-    'Nextspin', 'Triple Profits Games', 'BoomingGames', 'GPI', 'Mega Entertainment', 
-    'Relax Gaming', '5G', 'Smartsoft', 'No Limit City', 'Spribe', 
-    'Joker', 'PP', 'KingMidas', 'InOut', 'Rich Paradise'
+    'Evoplay', 'Spribe', 'Joker', 'PP'
   ];
 
-  // হট গেমস
   const hotGames = [
     { id: 'h1', name: 'Aviator', provider: 'Spribe', url: 'https://demo.spribe.co/launch/aviator' },
     { id: 'h2', name: 'Super Ace', provider: 'Jili', url: 'https://democasino.pgsoft.com/games/slot/id/69' },
-    { id: 'h3', name: 'High Flyer', provider: 'Spribe', url: 'https://demo.spribe.co/launch/aviator' },
-    { id: 'h4', name: 'Wild Bounty Showdown', provider: 'Pocket Games Soft', url: 'https://democasino.pgsoft.com/games/slot/id/74' },
-    { id: 'h5', name: 'Super Ace Deluxe', provider: 'Jili', url: 'https://democasino.pgsoft.com/games/slot/id/69' },
-    { id: 'h6', name: 'Super Elements', provider: 'FA CHAI Gaming', url: 'https://democasino.pgsoft.com/games/slot/id/74' },
-    { id: 'h7', name: 'Boxing King', provider: 'Jili', url: 'https://democasino.pgsoft.com/games/slot/id/69' },
-    { id: 'h8', name: 'Fortune Gems 3', provider: 'Jili', url: 'https://democasino.pgsoft.com/games/slot/id/74' },
-    { id: 'h9', name: 'Garuda Yoddha 500', provider: 'Jili', url: 'https://democasino.pgsoft.com/games/slot/id/69' },
-    { id: 'h10', name: 'Magic Ace Wild Lock', provider: 'Jili', url: 'https://democasino.pgsoft.com/games/slot/id/74' },
-    { id: 'h11', name: 'Crazy Time A', provider: 'Evoplay', url: 'https://casino.delawartest.com/iframe-roulette' },
-    { id: 'h12', name: 'FlyX', provider: 'Smartsoft', url: 'https://demo.spribe.co/launch/aviator' }
+    { id: 'h3', name: 'Wild Bounty Showdown', provider: 'Pocket Games Soft', url: 'https://democasino.pgsoft.com/games/slot/id/74' },
+    { id: 'h4', name: 'Fortune Gems 3', provider: 'Jili', url: 'https://democasino.pgsoft.com/games/slot/id/74' },
+    { id: 'h5', name: 'Boxing King', provider: 'Jili', url: 'https://democasino.pgsoft.com/games/slot/id/69' },
+    { id: 'h6', name: 'Super Ace Deluxe', provider: 'Jili', url: 'https://democasino.pgsoft.com/games/slot/id/69' }
   ];
-
-  const generateProviderGames = () => {
-    let list = [...hotGames];
-    const sampleWords = ['Slot', 'Bonanza', 'Gold', 'Fortune', 'Mega', 'Wild', 'Super', 'Crazy', 'Royal', 'Magic'];
-    
-    allProviders.forEach(prov => {
-      for (let i = 1; i <= 5; i++) {
-        list.push({
-          id: `${prov}-${i}`,
-          name: `${prov} ${sampleWords[i % sampleWords.length]} ${i}`,
-          provider: prov,
-          url: 'https://democasino.pgsoft.com/games/slot/id/69'
-        });
-      }
-    });
-    return list;
-  };
-
-  const allGames = generateProviderGames();
-
-  const filteredGames = allGames.filter(game => {
-    const matchesProvider = activeProvider === 'all' || game.provider.toLowerCase() === activeProvider.toLowerCase();
-    const matchesSearch = game.name.toLowerCase().includes(searchQuery.toLowerCase());
-    return matchesProvider && matchesSearch;
-  });
 
   const handleDepositSubmit = (e) => {
     e.preventDefault();
     const amount = parseFloat(depositAmount);
+    if (!amount || amount <= 0 || !trxId) {
+      alert('সঠিক তথ্য দিন!');
+      return;
+    }
+    setBalance(prev => prev + amount);
+    alert(`সফল! অ্যাকাউন্টে ৳ ${amount} যোগ হয়েছে।`);
+    setDepositAmount('');
+    setTrxId('');
+    setActiveTab('home');
+  };
+
+  const handleWithdrawSubmit = (e) => {
+    e.preventDefault();
+    const amount = parseFloat(withdrawAmount);
     if (!amount || amount <= 0) {
       alert('সঠিক পরিমাণ লিখুন!');
       return;
     }
-    if (!trxId) {
-      alert('ট্রানজেকশন আইডি দিন!');
+    if (amount > balance) {
+      alert('पर्याপ্ত ব্যালেন্স নেই!');
       return;
     }
-
-    setBalance(prev => prev + amount);
-    alert(`সফল! আপনার অ্যাকাউন্টে ৳ ${amount} যোগ হয়েছে।`);
-    setDepositAmount('');
-    setTrxId('');
-    setActiveTab('hot');
+    setBalance(prev => prev - amount);
+    alert(`উত্তোলন সফল হয়েছে! ৳ ${amount} কাটা হয়েছে।`);
+    setWithdrawAmount('');
+    setActiveTab('home');
   };
 
   return (
-    <div style={{ background: '#0b0e14', color: '#fff', minHeight: '100vh', fontFamily: 'Arial, sans-serif', paddingBottom: '70px' }}>
+    <div style={{ background: '#121824', color: '#fff', minHeight: '100vh', fontFamily: 'Arial, sans-serif', paddingBottom: '70px', maxWidth: '480px', margin: '0 auto', position: 'relative' }}>
       
-      {/* LA94 প্রিমিয়াম হেডার */}
-      <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 15px', background: '#131924', borderBottom: '1px solid #1f293d', position: 'sticky', top: 0, zIndex: 1000 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+      {/* টপ হেডার (QQ77 স্টাইল) */}
+      <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 15px', background: '#182030', borderBottom: '1px solid #222d42', position: 'sticky', top: 0, zIndex: 100 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <span onClick={() => setDrawerOpen(true)} style={{ fontSize: '22px', cursor: 'pointer', color: '#fff' }}>☰</span>
           <span style={{ fontSize: '20px', fontWeight: '900', color: '#ffb800', fontStyle: 'italic', letterSpacing: '1px' }}>LA94<span style={{color: '#fff', fontSize: '11px'}}>.COM</span></span>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <div style={{ background: '#0b0e14', padding: '4px 10px', borderRadius: '20px', border: '1px solid #00ffcc' }}>
-            <span style={{ fontSize: '11px', color: '#94a3b8' }}>৳ </span>
-            <span style={{ fontSize: '12px', fontWeight: 'bold', color: '#00ffcc' }}>{balance.toFixed(2)}</span>
+          <div style={{ background: '#0e131f', padding: '4px 10px', borderRadius: '20px', border: '1px solid #ffb800' }}>
+            <span style={{ fontSize: '11px', color: '#ffb800' }}>৳ </span>
+            <span style={{ fontSize: '12px', fontWeight: 'bold', color: '#fff' }}>{balance.toFixed(2)}</span>
           </div>
-          <button onClick={() => window.location.reload()} style={{ background: '#1f293d', border: 'none', color: '#fff', borderRadius: '50%', width: '28px', height: '28px', cursor: 'pointer', fontSize: '12px' }}>🔄</button>
+          <button onClick={() => window.location.reload()} style={{ background: '#222d42', border: 'none', color: '#fff', borderRadius: '50%', width: '28px', height: '28px', cursor: 'pointer', fontSize: '12px' }}>🔄</button>
         </div>
       </header>
 
-      {/* লাইভ উইনিং নোটিফিকেশন টিকার বার */}
-      <div style={{ background: '#1a2234', color: '#ffcc00', padding: '6px 12px', fontSize: '11px', borderBottom: '1px solid #25334d', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+      {/* সাইড মেনু ড্রয়ার (যেমন ৩৩৯৫ নম্বর স্ক্রিনশটে আছে) */}
+      {drawerOpen && (
+        <div style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', background: 'rgba(0,0,0,0.7)', zIndex: 2000, display: 'flex' }}>
+          <div style={{ width: '280px', background: '#182030', height: '100%', padding: '15px', display: 'flex', flexDirection: 'column', gap: '15px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid #222d42', paddingBottom: '10px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <div style={{ width: '35px', height: '35px', background: '#333', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold' }}>👤</div>
+                <div>
+                  <div style={{ fontSize: '12px', color: '#aaa' }}>স্বাগত</div>
+                  <div style={{ fontSize: '13px', fontWeight: 'bold', color: '#ffb800' }}>liamalvin</div>
+                </div>
+              </div>
+              <span onClick={() => setDrawerOpen(false)} style={{ fontSize: '20px', cursor: 'pointer', color: '#aaa' }}>✕</span>
+            </div>
+            
+            <div style={{ display: 'flex', gap: '10px' }}>
+              <button onClick={() => { setActiveTab('deposit'); setDrawerOpen(false); }} style={{ flex: 1, background: '#ef4444', border: 'none', color: '#fff', padding: '8px', borderRadius: '5px', fontWeight: 'bold', fontSize: '12px', cursor: 'pointer' }}>ডিপোজিট</button>
+              <button onClick={() => { setActiveTab('withdraw'); setDrawerOpen(false); }} style={{ flex: 1, background: '#3b82f6', border: 'none', color: '#fff', padding: '8px', borderRadius: '5px', fontWeight: 'bold', fontSize: '12px', cursor: 'pointer' }}>উত্তোলন</button>
+            </div>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', fontSize: '13px', color: '#ccc' }}>
+              <div onClick={() => { setActiveTab('deposit'); setDrawerOpen(false); }} style={{ cursor: 'pointer' }}>🏛️ ডিপোজিট</div>
+              <div onClick={() => { setActiveTab('withdraw'); setDrawerOpen(false); }} style={{ cursor: 'pointer' }}>💳 উত্তোলন করুন</div>
+              <div onClick={() => { setActiveTab('account'); setDrawerOpen(false); }} style={{ cursor: 'pointer' }}>👤 আমার অ্যাকাউন্ট</div>
+              <div onClick={() => { setActiveTab('home'); setDrawerOpen(false); }} style={{ cursor: 'pointer' }}>🏠 হোম পেজ</div>
+            </div>
+
+            <div style={{ marginTop: 'auto' }}>
+              <button onClick={() => alert('লগআউট সফল!')} style={{ width: '100%', background: '#b91c1c', color: '#fff', border: 'none', padding: '10px', borderRadius: '5px', fontWeight: 'bold', cursor: 'pointer' }}>🚪 লগ আউট</button>
+            </div>
+          </div>
+          <div style={{ flex: 1 }} onClick={() => setDrawerOpen(false)}></div>
+        </div>
+      )}
+
+      {/* লাইভ উইনিং নোটিফিকেশন বার */}
+      <div style={{ background: '#1e293b', color: '#ffcc00', padding: '6px 12px', fontSize: '11px', borderBottom: '1px solid #283548', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
         📢 <span>{winAlert}</span>
       </div>
 
-      {/* মেইন ক্যাটাগরি ট্যাব */}
-      <div style={{ display: 'flex', justifyContent: 'space-around', background: '#131924', padding: '10px 5px', borderBottom: '1px solid #1f293d' }}>
-        <div onClick={() => { setActiveTab('hot'); setSelectedGame(null); setActiveProvider('all'); }} style={{ textAlign: 'center', cursor: 'pointer', color: activeTab === 'hot' ? '#ff3366' : '#94a3b8' }}>
-          <div style={{ fontSize: '18px' }}>🔥</div>
-          <span style={{ fontSize: '10px', fontWeight: 'bold' }}>গরম</span>
-        </div>
-        <div onClick={() => { setActiveTab('slot'); setSelectedGame(null); }} style={{ textAlign: 'center', cursor: 'pointer', color: activeTab === 'slot' ? '#3b82f6' : '#94a3b8' }}>
-          <div style={{ fontSize: '18px' }}>🎰</div>
-          <span style={{ fontSize: '10px', fontWeight: 'bold' }}>স্লট</span>
-        </div>
-        <div onClick={() => { setActiveTab('deposit'); setSelectedGame(null); }} style={{ textAlign: 'center', cursor: 'pointer', color: activeTab === 'deposit' ? '#22c55e' : '#94a3b8' }}>
-          <div style={{ fontSize: '18px' }}>💳</div>
-          <span style={{ fontSize: '10px', fontWeight: 'bold' }}>ক্যাশইন</span>
-        </div>
-      </div>
-
       {/* মূল কন্টেন্ট এরিয়া */}
-      <main style={{ padding: '12px' }}>
+      <main style={{ padding: '10px' }}>
         {selectedGame ? (
           <div>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
-              <button onClick={() => setSelectedGame(null)} style={{ background: '#1f293d', color: '#fff', border: 'none', padding: '6px 12px', borderRadius: '5px', cursor: 'pointer', fontSize: '11px' }}>← লবিতে ফিরুন</button>
-              <div style={{ background: '#131924', padding: '4px 10px', borderRadius: '6px', border: '1px solid #00ffcc', fontSize: '11px' }}>
-                রিয়েল ব্যালেন্স: <strong style={{ color: '#00ffcc' }}>৳ {balance.toFixed(2)}</strong>
+              <button onClick={() => setSelectedGame(null)} style={{ background: '#222d42', color: '#fff', border: 'none', padding: '6px 12px', borderRadius: '5px', cursor: 'pointer', fontSize: '11px' }}>← লবিতে ফিরুন</button>
+              <div style={{ background: '#182030', padding: '4px 10px', borderRadius: '6px', border: '1px solid #ffb800', fontSize: '11px' }}>
+                ব্যালেন্স: <strong style={{ color: '#ffb800' }}>৳ {balance.toFixed(2)}</strong>
               </div>
             </div>
-            {/* গেম আইফ্রেম ভিউ */}
-            <div style={{ width: '100%', height: '500px', background: '#000', borderRadius: '8px', overflow: 'hidden', border: '1px solid #1f293d' }}>
+            <div style={{ width: '100%', height: '500px', background: '#000', borderRadius: '8px', overflow: 'hidden', border: '1px solid #222d42' }}>
               <iframe src={selectedGame.url} title={selectedGame.name} width="100%" height="100%" style={{ border: 'none' }} allowFullScreen></iframe>
             </div>
           </div>
         ) : activeTab === 'deposit' ? (
-          /* ক্যাশইন পেজ */
-          <div style={{ background: '#131924', padding: '15px', borderRadius: '10px', border: '1px solid #1f293d', maxWidth: '400px', margin: '15px auto' }}>
-            <h3 style={{ color: '#00ffcc', marginBottom: '12px', textAlign: 'center', fontSize: '16px' }}>টাকা ক্যাশইন (Deposit)</h3>
-            <p style={{ fontSize: '12px', color: '#94a3b8', textAlign: 'center', marginBottom: '12px' }}>বিকাশ/নগদ পার্সোনাল নম্বর: <strong style={{ color: '#fff' }}>01700000000</strong></p>
-            
+          /* ডিপোজিট পেজ */
+          <div style={{ background: '#182030', padding: '15px', borderRadius: '10px', border: '1px solid #222d42' }}>
+            <h3 style={{ color: '#ffb800', marginBottom: '10px', textAlign: 'center', fontSize: '15px' }}>টাকা ডিপোজিট</h3>
+            <p style={{ fontSize: '11px', color: '#aaa', textAlign: 'center', marginBottom: '12px' }}>বিকাশ/নগদ নম্বর: <strong style={{ color: '#fff' }}>01700000000</strong></p>
             <form onSubmit={handleDepositSubmit}>
               <div style={{ marginBottom: '10px' }}>
-                <label style={{ fontSize: '11px', color: '#94a3b8', display: 'block', marginBottom: '4px' }}>টাকার পরিমাণ (BDT)</label>
-                <input 
-                  type="number" 
-                  placeholder="যেমন: 500" 
-                  value={depositAmount}
-                  onChange={(e) => setDepositAmount(e.target.value)}
-                  style={{ width: '100%', padding: '9px', background: '#0b0e14', color: '#fff', border: '1px solid #1f293d', borderRadius: '6px', outline: 'none', fontSize: '13px' }} 
-                />
+                <label style={{ fontSize: '11px', color: '#aaa', display: 'block', marginBottom: '4px' }}>পরিমাণ (BDT)</label>
+                <input type="number" placeholder="যেমন: 500" value={depositAmount} onChange={(e) => setDepositAmount(e.target.value)} style={{ width: '100%', padding: '9px', background: '#121824', color: '#fff', border: '1px solid #222d42', borderRadius: '6px', outline: 'none', fontSize: '13px' }} />
               </div>
               <div style={{ marginBottom: '12px' }}>
-                <label style={{ fontSize: '11px', color: '#94a3b8', display: 'block', marginBottom: '4px' }}>ট্রানজেকশন আইডি (TrxID)</label>
-                <input 
-                  type="text" 
-                  placeholder="TrxID দিন" 
-                  value={trxId}
-                  onChange={(e) => setTrxId(e.target.value)}
-                  style={{ width: '100%', padding: '9px', background: '#0b0e14', color: '#fff', border: '1px solid #1f293d', borderRadius: '6px', outline: 'none', fontSize: '13px' }} 
-                />
+                <label style={{ fontSize: '11px', color: '#aaa', display: 'block', marginBottom: '4px' }}>ট্রানজেকশন আইডি (TrxID)</label>
+                <input type="text" placeholder="TrxID দিন" value={trxId} onChange={(e) => setTrxId(e.target.value)} style={{ width: '100%', padding: '9px', background: '#121824', color: '#fff', border: '1px solid #222d42', borderRadius: '6px', outline: 'none', fontSize: '13px' }} />
               </div>
-              <button type="submit" style={{ width: '100%', background: '#22c55e', color: '#fff', border: 'none', padding: '10px', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer', fontSize: '13px' }}>ক্যাশইন কনফার্ম করুন</button>
+              <button type="submit" style={{ width: '100%', background: '#22c55e', color: '#fff', border: 'none', padding: '10px', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer', fontSize: '13px' }}>ডিপোজিট কনফার্ম করুন</button>
             </form>
+          </div>
+        ) : activeTab === 'withdraw' ? (
+          /* উইথড্র পেজ */
+          <div style={{ background: '#182030', padding: '15px', borderRadius: '10px', border: '1px solid #222d42' }}>
+            <h3 style={{ color: '#3b82f6', marginBottom: '10px', textAlign: 'center', fontSize: '15px' }}>টাকা উত্তোলন</h3>
+            <form onSubmit={handleWithdrawSubmit}>
+              <div style={{ marginBottom: '12px' }}>
+                <label style={{ fontSize: '11px', color: '#aaa', display: 'block', marginBottom: '4px' }}>উত্তোলনের পরিমাণ (BDT)</label>
+                <input type="number" placeholder="যেমন: 500" value={withdrawAmount} onChange={(e) => setWithdrawAmount(e.target.value)} style={{ width: '100%', padding: '9px', background: '#121824', color: '#fff', border: '1px solid #222d42', borderRadius: '6px', outline: 'none', fontSize: '13px' }} />
+              </div>
+              <button type="submit" style={{ width: '100%', background: '#3b82f6', color: '#fff', border: 'none', padding: '10px', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer', fontSize: '13px' }}>উত্তোলন অনুরোধ পাঠান</button>
+            </form>
+          </div>
+        ) : activeTab === 'account' ? (
+          /* সদস্য সেন্টার / অ্যাকাউন্ট পেজ (যেমন ৩৩৯৭ নম্বর স্ক্রিনশটে আছে) */
+          <div>
+            <div style={{ background: 'linear-gradient(135deg, #2b374e, #182030)', padding: '15px', borderRadius: '10px', border: '1px solid #ffb800', marginBottom: '15px', textAlign: 'center' }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px', marginBottom: '8px' }}>
+                <div style={{ width: '45px', height: '45px', background: '#444', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '20px' }}>👨‍💼</div>
+                <div style={{ textAlign: 'left' }}>
+                  <div style={{ fontSize: '14px', fontWeight: 'bold', color: '#fff' }}>liamalvin</div>
+                  <span style={{ background: '#ffb800', color: '#000', fontSize: '10px', padding: '1px 6px', borderRadius: '4px', fontWeight: 'bold' }}>VIP4</span>
+                </div>
+              </div>
+              <div style={{ fontSize: '20px', fontWeight: 'bold', color: '#ffb800', margin: '10px 0' }}>৳ {balance.toFixed(2)}</div>
+              <div style={{ display: 'flex', gap: '8px', justifyContent: 'center' }}>
+                <button onClick={() => setActiveTab('deposit')} style={{ background: '#ef4444', border: 'none', color: '#fff', padding: '6px 15px', borderRadius: '5px', fontSize: '11px', fontWeight: 'bold', cursor: 'pointer' }}>জমা দিন</button>
+                <button onClick={() => setActiveTab('withdraw')} style={{ background: '#3b82f6', border: 'none', color: '#fff', padding: '6px 15px', borderRadius: '5px', fontSize: '11px', fontWeight: 'bold', cursor: 'pointer' }}>উত্তোলন</button>
+              </div>
+            </div>
+
+            {/* অপশন গ্রিড */}
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '10px', textAlign: 'center' }}>
+              {[
+                { name: 'পুরস্কার সেন্টার', icon: '🏆' },
+                { name: 'বেটিং রেকর্ড', icon: '📊' },
+                { name: 'লাভ এবং লস', icon: '📈' },
+                { name: 'জমা রেকর্ড', icon: '📥' },
+                { name: 'উত্তোলন রেকর্ড', icon: '📤' },
+                { name: 'অ্যাকাউন্ট রেকর্ড', icon: '📑' },
+                { name: 'আমার অ্যাকাউন্ট', icon: '👤' },
+                { name: 'সুরক্ষা কেন্দ্র', icon: '🛡️' },
+                { name: 'বন্ধুদের আমন্ত্রণ', icon: '🤝' },
+                { name: 'মিশন', icon: '🎁' },
+                { name: 'রিবেট', icon: '💰' },
+                { name: 'কাউন্টার সার্ভিস', icon: '🎧' }
+              ].map((item, idx) => (
+                <div key={idx} onClick={() => alert(`${item.name} সেকশনটি খোলা হয়েছে!`)} style={{ background: '#182030', padding: '10px 5px', borderRadius: '8px', border: '1px solid #222d42', cursor: 'pointer' }}>
+                  <div style={{ fontSize: '20px', marginBottom: '5px' }}>{item.icon}</div>
+                  <span style={{ fontSize: '9px', color: '#ccc' }}>{item.name}</span>
+                </div>
+              ))}
+            </div>
           </div>
         ) : (
           <div>
-            {/* ব্যানার স্লাইডার সেকশন */}
-            <div style={{ background: 'linear-gradient(135deg, #1e293b, #0f172a)', padding: '20px 15px', borderRadius: '10px', marginBottom: '15px', border: '1px solid #334155', textAlign: 'center' }}>
-              <h2 style={{ color: '#ffb800', fontSize: '18px', margin: '0 0 5px 0' }}>WELCOME TO LA94.COM</h2>
-              <p style={{ color: '#94a3b8', fontSize: '11px', margin: 0 }}>সেরা ক্যাশইন ও ফাস্ট গেম প্লে অভিজ্ঞতা!</p>
+            {/* VIP ব্যানার (যেমন ৩৩৯৬ নম্বর স্ক্রিনশটে আছে) */}
+            <div style={{ background: 'linear-gradient(135deg, #3b1c24, #182030)', padding: '15px', borderRadius: '10px', marginBottom: '12px', border: '1px solid #ff3366', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <div>
+                <span style={{ background: '#ff3366', color: '#fff', fontSize: '9px', padding: '2px 6px', borderRadius: '4px', fontWeight: 'bold' }}>VIP সুবিধা</span>
+                <h3 style={{ color: '#ffb800', fontSize: '14px', margin: '5px 0' }}>প্রচার বোনাস: ৳ ২০,০০,০০০</h3>
+                <p style={{ color: '#aaa', fontSize: '10px', margin: 0 }}>সাপ্তাহিক বেতন: ৳ ৪,০০,০০০</p>
+              </div>
+              <div style={{ fontSize: '30px' }}>👑</div>
+            </div>
+
+            {/* মাঝখানের শর্টকাট আইকন (ডিপোজিট, উত্তোলন, পুরস্কার, রিবেট) */}
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '8px', marginBottom: '15px', textAlign: 'center' }}>
+              <div onClick={() => setActiveTab('deposit')} style={{ background: '#182030', padding: '10px 5px', borderRadius: '8px', border: '1px solid #222d42', cursor: 'pointer' }}>
+                <div style={{ fontSize: '16px', color: '#22c55e' }}>💰</div>
+                <span style={{ fontSize: '10px', color: '#ccc' }}>ডিপোজিট</span>
+              </div>
+              <div onClick={() => setActiveTab('withdraw')} style={{ background: '#182030', padding: '10px 5px', borderRadius: '8px', border: '1px solid #222d42', cursor: 'pointer' }}>
+                <div style={{ fontSize: '16px', color: '#3b82f6' }}>💳</div>
+                <span style={{ fontSize: '10px', color: '#ccc' }}>উত্তোলন</span>
+              </div>
+              <div onClick={() => setActiveTab('account')} style={{ background: '#182030', padding: '10px 5px', borderRadius: '8px', border: '1px solid #222d42', cursor: 'pointer' }}>
+                <div style={{ fontSize: '16px', color: '#ffb800' }}>🏆</div>
+                <span style={{ fontSize: '10px', color: '#ccc' }}>পুরস্কার</span>
+              </div>
+              <div onClick={() => setActiveTab('account')} style={{ background: '#182030', padding: '10px 5px', borderRadius: '8px', border: '1px solid #222d42', cursor: 'pointer' }}>
+                <div style={{ fontSize: '16px', color: '#a855f7' }}>💵</div>
+                <span style={{ fontSize: '10px', color: '#ccc' }}>রিবেট</span>
+              </div>
+            </div>
+
+            {/* গেম ক্যাটাগরি ট্যাব (গরম, স্লট, লাইভ, পোকার, স্পোর্টস) */}
+            <div style={{ display: 'flex', justifyContent: 'space-between', background: '#182030', padding: '10px', borderRadius: '8px', marginBottom: '15px', border: '1px solid #222d42', textAlign: 'center' }}>
+              <div onClick={() => setActiveTab('home')} style={{ cursor: 'pointer', color: '#ff3366', fontSize: '11px', fontWeight: 'bold' }}>🔥 গরম</div>
+              <div onClick={() => setActiveTab('slot')} style={{ cursor: 'pointer', color: '#aaa', fontSize: '11px' }}>🎰 স্লট</div>
+              <div onClick={() => setActiveTab('home')} style={{ cursor: 'pointer', color: '#aaa', fontSize: '11px' }}>🎲 লাইভ</div>
+              <div onClick={() => setActiveTab('home')} style={{ cursor: 'pointer', color: '#aaa', fontSize: '11px' }}>♟️ পোকার</div>
+              <div onClick={() => setActiveTab('home')} style={{ cursor: 'pointer', color: '#aaa', fontSize: '11px' }}>🏏 স্পোর্টস</div>
             </div>
 
             {/* সার্চ বক্স */}
             <div style={{ marginBottom: '12px' }}>
-              <input 
-                type="text" 
-                placeholder="গেম খুঁজুন..." 
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                style={{ width: '100%', padding: '9px 12px', background: '#131924', color: '#fff', border: '1px solid #1f293d', borderRadius: '8px', outline: 'none', fontSize: '12px' }}
-              />
+              <input type="text" placeholder="গেম খুঁজুন..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} style={{ width: '100%', padding: '9px 12px', background: '#182030', color: '#fff', border: '1px solid #222d42', borderRadius: '8px', outline: 'none', fontSize: '12px' }} />
             </div>
 
-            {/* প্রোভাইডার ফিল্টার বাটন */}
-            {activeTab === 'slot' && (
-              <div style={{ marginBottom: '15px' }}>
-                <p style={{ fontSize: '11px', color: '#94a3b8', marginBottom: '6px' }}>প্রোভাইডার সিলেক্ট করুন:</p>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '6px', maxHeight: '150px', overflowY: 'auto', background: '#131924', padding: '6px', borderRadius: '8px', border: '1px solid #1f293d' }}>
-                  <button 
-                    onClick={() => setActiveProvider('all')}
-                    style={{ background: activeProvider === 'all' ? '#3b82f6' : '#0b0e14', color: '#fff', border: '1px solid #1f293d', padding: '6px 4px', borderRadius: '15px', fontSize: '10px', cursor: 'pointer', fontWeight: 'bold' }}
-                  >
-                    All
-                  </button>
-                  {allProviders.map(prov => (
-                    <button 
-                      key={prov}
-                      onClick={() => setActiveProvider(prov)}
-                      style={{ background: activeProvider === prov ? '#3b82f6' : '#0b0e14', color: '#fff', border: '1px solid #1f293d', padding: '6px 4px', borderRadius: '15px', fontSize: '10px', cursor: 'pointer', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}
-                    >
-                      {prov}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* গেম গ্রিড */}
+            {/* গেম গ্রিড (QQ77 স্টাইল কার্ড) */}
+            <h4 style={{ fontSize: '13px', color: '#ffb800', marginBottom: '8px' }}>🔥 গরম গেমস</h4>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '8px' }}>
-              {(activeTab === 'hot' && searchQuery === '' && activeProvider === 'all' ? hotGames : filteredGames).map(game => (
-                <div key={game.id} onClick={() => setSelectedGame(game)} style={{ background: '#131924', borderRadius: '8px', padding: '6px', textAlign: 'center', border: '1px solid #1f293d', cursor: 'pointer', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
-                  <div style={{ background: '#1b2436', height: '60px', borderRadius: '6px', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '5px', fontSize: '18px', color: '#ffb800' }}>
-                    🎮
-                  </div>
+              {hotGames.filter(g => g.name.toLowerCase().includes(searchQuery.toLowerCase())).map(game => (
+                <div key={game.id} onClick={() => setSelectedGame(game)} style={{ background: '#182030', borderRadius: '8px', padding: '6px', textAlign: 'center', border: '1px solid #222d42', cursor: 'pointer' }}>
+                  <div style={{ background: '#111622', height: '60px', borderRadius: '6px', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '5px', fontSize: '18px', color: '#ffb800' }}>🎮</div>
                   <h4 style={{ fontSize: '10px', margin: '0 0 2px 0', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{game.name}</h4>
-                  <span style={{ fontSize: '8px', color: '#94a3b8', display: 'block', marginBottom: '5px' }}>{game.provider}</span>
-                  <div style={{ background: '#00ffcc', color: '#000', padding: '3px 0', borderRadius: '4px', fontWeight: 'bold', fontSize: '9px' }}>খেলুন</div>
+                  <span style={{ fontSize: '8px', color: '#aaa', display: 'block', marginBottom: '5px' }}>{game.provider}</span>
+                  <div style={{ background: '#ffb800', color: '#000', padding: '3px 0', borderRadius: '4px', fontWeight: 'bold', fontSize: '9px' }}>খেলুন</div>
                 </div>
               ))}
             </div>
@@ -256,15 +291,27 @@ export default function App() {
         )}
       </main>
 
-      {/* ফুটার নেভিগেশন */}
-      <nav style={{ position: 'fixed', bottom: 0, left: 0, right: 0, background: '#131924', borderTop: '1px solid #1f293d', display: 'flex', justifyContent: 'space-around', padding: '8px 0', zIndex: 1000 }}>
-        <div onClick={() => { setActiveTab('hot'); setSelectedGame(null); }} style={{ textAlign: 'center', cursor: 'pointer', color: activeTab === 'hot' ? '#00ffcc' : '#94a3b8' }}>
+      {/* ফুটার নেভিগেশন বার (যেমন ৩৩৯৬ নম্বর স্ক্রিনশটের একদম নিচে আছে) */}
+      <nav style={{ position: 'fixed', bottom: 0, left: 0, right: 0, background: '#182030', borderTop: '1px solid #222d42', display: 'flex', justifyContent: 'space-around', padding: '8px 0', zIndex: 100, maxWidth: '480px', margin: '0 auto' }}>
+        <div onClick={() => { setActiveTab('home'); setSelectedGame(null); }} style={{ textAlign: 'center', cursor: 'pointer', color: activeTab === 'home' ? '#ff3366' : '#aaa' }}>
           <div style={{ fontSize: '16px' }}>🏠</div>
           <span style={{ fontSize: '9px' }}>হোম</span>
         </div>
-        <div onClick={() => { setActiveTab('deposit'); setSelectedGame(null); }} style={{ textAlign: 'center', cursor: 'pointer', color: activeTab === 'deposit' ? '#00ffcc' : '#94a3b8' }}>
+        <div onClick={() => { setActiveTab('deposit'); setSelectedGame(null); }} style={{ textAlign: 'center', cursor: 'pointer', color: activeTab === 'deposit' ? '#22c55e' : '#aaa' }}>
+          <div style={{ fontSize: '16px' }}>🤝</div>
+          <span style={{ fontSize: '9px' }}>শেয়ার</span>
+        </div>
+        <div onClick={() => { setActiveTab('home'); setSelectedGame(null); }} style={{ textAlign: 'center', cursor: 'pointer', color: '#ffb800' }}>
+          <div style={{ fontSize: '18px' }}>🎁</div>
+          <span style={{ fontSize: '9px' }}>প্রমোশন</span>
+        </div>
+        <div onClick={() => { setActiveTab('deposit'); setSelectedGame(null); }} style={{ textAlign: 'center', cursor: 'pointer', color: activeTab === 'deposit' ? '#22c55e' : '#aaa' }}>
           <div style={{ fontSize: '16px' }}>💳</div>
-          <span style={{ fontSize: '9px' }}>ক্যাশইন</span>
+          <span style={{ fontSize: '9px' }}>ডিপোজিট</span>
+        </div>
+        <div onClick={() => { setActiveTab('account'); setSelectedGame(null); }} style={{ textAlign: 'center', cursor: 'pointer', color: activeTab === 'account' ? '#3b82f6' : '#aaa' }}>
+          <div style={{ fontSize: '16px' }}>👤</div>
+          <span style={{ fontSize: '9px' }}>সদস্যরা</span>
         </div>
       </nav>
 
