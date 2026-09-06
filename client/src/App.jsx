@@ -1,7 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 export default function App() {
-  const [balance, setBalance] = useState(0);
+  // লোকাল স্টোরেজ থেকে ব্যালেন্স লোড করা যাতে রিলোড দিলে মুছে না যায়
+  const [balance, setBalance] = useState(() => {
+    const saved = localStorage.getItem('la94_balance');
+    return saved !== null ? parseFloat(saved) : 0;
+  });
+
   const [activeTab, setActiveTab] = useState('hot');
   const [activeProvider, setActiveProvider] = useState('all');
   const [selectedGame, setSelectedGame] = useState(null);
@@ -10,6 +15,30 @@ export default function App() {
   // ডিপোজিট স্টেট
   const [depositAmount, setDepositAmount] = useState('');
   const [trxId, setTrxId] = useState('');
+
+  // লাইভ উইনিং নোটিফিকেশন স্টেট
+  const [winAlert, setWinAlert] = useState('ยินดีต้อนรับสู่ LA94.COM - 🌟 Selamat datang!');
+
+  // ব্যালেন্স সেভ করার ইফেক্ট
+  useEffect(() => {
+    localStorage.setItem('la94_balance', balance);
+  }, [balance]);
+
+  // ফেক লাইভ উইনিং নোটিফিকেশন জেনারেটর
+  useEffect(() => {
+    const names = ['Rahim***', 'Karim***', 'Hasan***', 'Ripon***', 'Aminul***', 'Sojib***', 'Nasir***'];
+    const games = ['Aviator', 'Super Ace', 'Wild Bounty', 'Fortune Gems', 'Boxing King'];
+    const amounts = [500, 1200, 2500, 5000, 10000, 350];
+
+    const interval = setInterval(() => {
+      const randomName = names[Math.floor(Math.random() * names.length)];
+      const randomGame = games[Math.floor(Math.random() * games.length)];
+      const randomAmount = amounts[Math.floor(Math.random() * amounts.length)];
+      setWinAlert(`🎉 ${randomName} won ৳${randomAmount} in ${randomGame}!`);
+    }, 4000);
+
+    return () => clearInterval(interval);
+  }, []);
 
   // প্রোভাইডার তালিকা
   const allProviders = [
@@ -87,9 +116,9 @@ export default function App() {
   return (
     <div style={{ background: '#0b0e14', color: '#fff', minHeight: '100vh', fontFamily: 'Arial, sans-serif', paddingBottom: '70px' }}>
       
-      {/* LA94 টপ হেডার */}
+      {/* LA94 প্রিমিয়াম হেডার */}
       <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 15px', background: '#131924', borderBottom: '1px solid #1f293d', position: 'sticky', top: 0, zIndex: 1000 }}>
-        <div style={{ display: 'flex', alignItems: 'center' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
           <span style={{ fontSize: '20px', fontWeight: '900', color: '#ffb800', fontStyle: 'italic', letterSpacing: '1px' }}>LA94<span style={{color: '#fff', fontSize: '11px'}}>.COM</span></span>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -100,6 +129,11 @@ export default function App() {
           <button onClick={() => window.location.reload()} style={{ background: '#1f293d', border: 'none', color: '#fff', borderRadius: '50%', width: '28px', height: '28px', cursor: 'pointer', fontSize: '12px' }}>🔄</button>
         </div>
       </header>
+
+      {/* লাইভ উইনিং নোটিফিকেশন টিকার বার */}
+      <div style={{ background: '#1a2234', color: '#ffcc00', padding: '6px 12px', fontSize: '11px', borderBottom: '1px solid #25334d', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+        📢 <span>{winAlert}</span>
+      </div>
 
       {/* মেইন ক্যাটাগরি ট্যাব */}
       <div style={{ display: 'flex', justifyContent: 'space-around', background: '#131924', padding: '10px 5px', borderBottom: '1px solid #1f293d' }}>
@@ -164,6 +198,12 @@ export default function App() {
           </div>
         ) : (
           <div>
+            {/* ব্যানার স্লাইডার সেকশন */}
+            <div style={{ background: 'linear-gradient(135deg, #1e293b, #0f172a)', padding: '20px 15px', borderRadius: '10px', marginBottom: '15px', border: '1px solid #334155', textAlign: 'center' }}>
+              <h2 style={{ color: '#ffb800', fontSize: '18px', margin: '0 0 5px 0' }}>WELCOME TO LA94.COM</h2>
+              <p style={{ color: '#94a3b8', fontSize: '11px', margin: 0 }}>সেরা ক্যাশইন ও ফাস্ট গেম প্লে অভিজ্ঞতা!</p>
+            </div>
+
             {/* সার্চ বক্স */}
             <div style={{ marginBottom: '12px' }}>
               <input 
