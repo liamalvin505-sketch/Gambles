@@ -6,8 +6,12 @@ export default function App() {
   const [activeProvider, setActiveProvider] = useState('all');
   const [selectedGame, setSelectedGame] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
+  
+  // ডিপোজিট ইনপুট স্টেট
+  const [depositAmount, setDepositAmount] = useState('');
+  const [trxId, setTrxId] = useState('');
 
-  // ছবিতে দেওয়া সমস্ত প্রোভাইডারের তালিকা
+  // প্রোভাইডার তালিকা
   const allProviders = [
     'Jili', 'Pocket Games Soft', 'BNG', 'JDB', 'FA CHAI Gaming', 
     'BTGaming', 'Naga Games', 'KA Gaming', 'PLAYSTAR', 'Askmeslot', 
@@ -20,7 +24,7 @@ export default function App() {
     'Joker', 'PP', 'KingMidas', 'InOut', 'Rich Paradise'
   ];
 
-  // হট গেমস (৩য় ছবির আদলে)
+  // হট গেমস
   const hotGames = [
     { id: 'h1', name: 'Aviator', provider: 'Spribe', category: 'hot', url: 'https://demo.spribe.co/launch/aviator' },
     { id: 'h2', name: 'Super Ace', provider: 'Jili', category: 'hot', url: 'https://democasino.pgsoft.com/games/slot/id/69' },
@@ -36,13 +40,11 @@ export default function App() {
     { id: 'h12', name: 'FlyX', provider: 'Smartsoft', category: 'hot', url: 'https://demo.spribe.co/launch/aviator' }
   ];
 
-  // প্রতিটি প্রোভাইডারের গেম অটো জেনারেটর (জনপ্রিয় গেমগুলো উপরে থাকবে)
   const generateProviderGames = () => {
-    let list = [...hotGames]; // জনপ্রিয় হট গেমগুলো প্রথমে থাকবে
+    let list = [...hotGames];
     const sampleWords = ['Slot', 'Bonanza', 'Gold', 'Fortune', 'Mega', 'Wild', 'Super', 'Crazy', 'Royal', 'Magic'];
     
     allProviders.forEach(prov => {
-      // প্রতিটি কোম্পানির ৫টি করে ডিফল্ট গেম তৈরি করা হলো
       for (let i = 1; i <= 5; i++) {
         list.push({
           id: `${prov}-${i}`,
@@ -58,29 +60,50 @@ export default function App() {
 
   const allGames = generateProviderGames();
 
-  // সার্চ এবং ফিল্টার লজিক
   const filteredGames = allGames.filter(game => {
     const matchesProvider = activeProvider === 'all' || game.provider.toLowerCase() === activeProvider.toLowerCase();
     const matchesSearch = game.name.toLowerCase().includes(searchQuery.toLowerCase());
     return matchesProvider && matchesSearch;
   });
 
+  // ডিপোজিট হ্যান্ডলার (যত টাকা ক্যাশইন করবে তত টাকা ব্যালেন্সে অটো যোগ হবে)
+  const handleDepositSubmit = (e) => {
+    e.preventDefault();
+    const amount = parseFloat(depositAmount);
+    if (!amount || amount <= 0) {
+      alert('সঠিক পরিমাণ লিখুন!');
+      return;
+    }
+    if (!trxId) {
+      alert('ট্রানজেকশন আইডি দিন!');
+      return;
+    }
+
+    setBalance(prev => prev + amount);
+    alert(`সফল! আপনার অ্যাকাউন্টে ৳ ${amount} যোগ হয়েছে।`);
+    setDepositAmount('');
+    setTrxId('');
+    setActiveTab('hot');
+  };
+
   return (
     <div style={{ background: '#0f1423', color: '#fff', minHeight: '100vh', fontFamily: 'Arial, sans-serif', paddingBottom: '70px' }}>
       
-      {/* টপ হেডার (QQ777.com) */}
+      {/* টপ হেডার */}
       <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 15px', background: '#1a2238', borderBottom: '1px solid #2a3655' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
           <span style={{ fontSize: '20px', fontWeight: '900', color: '#ffcc00', fontStyle: 'italic', letterSpacing: '1px' }}>QQ777<span style={{color: '#fff', fontSize: '12px'}}>.COM</span></span>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-          <span style={{ fontSize: '14px', fontWeight: 'bold', color: '#00ffcc' }}>{balance}</span>
-          <button onClick={() => window.location.reload()} style={{ background: 'none', border: 'none', color: '#fff', cursor: 'pointer', fontSize: '16px' }}>🔄</button>
-          <span style={{ fontSize: '18px', cursor: 'pointer' }}>✉️</span>
+          <div style={{ background: '#0f1423', padding: '4px 10px', borderRadius: '15px', border: '1px solid #00ffcc' }}>
+            <span style={{ fontSize: '12px', color: '#94a3b8' }}>বালেন্স: </span>
+            <span style={{ fontSize: '13px', fontWeight: 'bold', color: '#00ffcc' }}>৳ {balance.toFixed(2)}</span>
+          </div>
+          <button onClick={() => window.location.reload()} style={{ background: 'none', border: 'none', color: '#fff', cursor: 'pointer', fontSize: '14px' }}>🔄</button>
         </div>
       </header>
 
-      {/* মেইন ক্যাটাগরি ট্যাব (গরম, স্লট, লাইভ, পকার, স্পোর্টস) */}
+      {/* মেইন ক্যাটাগরি ট্যাব */}
       <div style={{ display: 'flex', justifyContent: 'space-around', background: '#121826', padding: '10px 5px', borderBottom: '1px solid #222d42' }}>
         <div onClick={() => { setActiveTab('hot'); setSelectedGame(null); setActiveProvider('all'); }} style={{ textAlign: 'center', cursor: 'pointer', color: activeTab === 'hot' ? '#ff3366' : '#94a3b8' }}>
           <div style={{ fontSize: '20px' }}>🔥</div>
@@ -90,17 +113,9 @@ export default function App() {
           <div style={{ fontSize: '20px' }}>🎰</div>
           <span style={{ fontSize: '11px', fontWeight: 'bold' }}>স্লট</span>
         </div>
-        <div onClick={() => { setActiveTab('live'); setSelectedGame(null); }} style={{ textAlign: 'center', cursor: 'pointer', color: activeTab === 'live' ? '#3b82f6' : '#94a3b8' }}>
-          <div style={{ fontSize: '20px' }}>🎲</div>
-          <span style={{ fontSize: '11px', fontWeight: 'bold' }}>লাইভ</span>
-        </div>
-        <div onClick={() => { setActiveTab('poker'); setSelectedGame(null); }} style={{ textAlign: 'center', cursor: 'pointer', color: activeTab === 'poker' ? '#3b82f6' : '#94a3b8' }}>
-          <div style={{ fontSize: '20px' }}>♟️</div>
-          <span style={{ fontSize: '11px', fontWeight: 'bold' }}>পকার</span>
-        </div>
-        <div onClick={() => { setActiveTab('sports'); setSelectedGame(null); }} style={{ textAlign: 'center', cursor: 'pointer', color: activeTab === 'sports' ? '#3b82f6' : '#94a3b8' }}>
-          <div style={{ fontSize: '20px' }}>⚽</div>
-          <span style={{ fontSize: '11px', fontWeight: 'bold' }}>স্পোর্টস</span>
+        <div onClick={() => { setActiveTab('deposit'); setSelectedGame(null); }} style={{ textAlign: 'center', cursor: 'pointer', color: activeTab === 'deposit' ? '#22c55e' : '#94a3b8' }}>
+          <div style={{ fontSize: '20px' }}>💳</div>
+          <span style={{ fontSize: '11px', fontWeight: 'bold' }}>ক্যাশইন</span>
         </div>
       </div>
 
@@ -108,10 +123,46 @@ export default function App() {
       <main style={{ padding: '15px' }}>
         {selectedGame ? (
           <div>
-            <button onClick={() => setSelectedGame(null)} style={{ marginBottom: '15px', background: '#334155', color: '#fff', border: 'none', padding: '8px 15px', borderRadius: '5px', cursor: 'pointer' }}>← লবিতে ফিরুন</button>
-            <div style={{ width: '100%', height: '500px', background: '#000', borderRadius: '10px', overflow: 'hidden' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
+              <button onClick={() => setSelectedGame(null)} style={{ background: '#334155', color: '#fff', border: 'none', padding: '6px 12px', borderRadius: '5px', cursor: 'pointer', fontSize: '12px' }}>← লবিতে ফিরুন</button>
+              <div style={{ background: '#1a2238', padding: '4px 10px', borderRadius: '6px', border: '1px solid #00ffcc', fontSize: '12px' }}>
+                রিয়েল ব্যালেন্স: <strong style={{ color: '#00ffcc' }}>৳ {balance.toFixed(2)}</strong>
+              </div>
+            </div>
+            {/* গেম স্ক্রিন উইদাউট ডেমো লোগো ফ্রেমিং */}
+            <div style={{ width: '100%', height: '520px', background: '#000', borderRadius: '10px', overflow: 'hidden', border: '1px solid #2a3655' }}>
               <iframe src={selectedGame.url} title={selectedGame.name} width="100%" height="100%" style={{ border: 'none' }} allowFullScreen></iframe>
             </div>
+          </div>
+        ) : activeTab === 'deposit' ? (
+          /* ক্যাশইন ফর্ম পেজ */
+          <div style={{ background: '#1a2238', padding: '20px', borderRadius: '12px', border: '1px solid #2a3655', maxWidth: '400px', margin: '20px auto' }}>
+            <h3 style={{ color: '#00ffcc', marginBottom: '15px', textAlign: 'center' }}>টাকা ক্যাশইন (Deposit)</h3>
+            <p style={{ fontSize: '13px', color: '#94a3b8', textAlign: 'center', marginBottom: '15px' }}>বিকাশ/নগদ পার্সোনাল নম্বর: <strong style={{ color: '#fff' }}>01700000000</strong></p>
+            
+            <form onSubmit={handleDepositSubmit}>
+              <div style={{ marginBottom: '12px' }}>
+                <label style={{ fontSize: '12px', color: '#94a3b8', display: 'block', marginBottom: '5px' }}>টাকার পরিমাণ (BDT)</label>
+                <input 
+                  type="number" 
+                  placeholder="যেমন: 1000" 
+                  value={depositAmount}
+                  onChange={(e) => setDepositAmount(e.target.value)}
+                  style={{ width: '100%', padding: '10px', background: '#0f1423', color: '#fff', border: '1px solid #334155', borderRadius: '6px', outline: 'none' }} 
+                />
+              </div>
+              <div style={{ marginBottom: '15px' }}>
+                <label style={{ fontSize: '12px', color: '#94a3b8', display: 'block', marginBottom: '5px' }}>ট্রানজেকশন আইডি (TrxID)</label>
+                <input 
+                  type="text" 
+                  placeholder="TrxID লিখুন" 
+                  value={trxId}
+                  onChange={(e) => setTrxId(e.target.value)}
+                  style={{ width: '100%', padding: '10px', background: '#0f1423', color: '#fff', border: '1px solid #334155', borderRadius: '6px', outline: 'none' }} 
+                />
+              </div>
+              <button type="submit" style={{ width: '100%', background: '#22c55e', color: '#fff', border: 'none', padding: '12px', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer', fontSize: '14px' }}>ক্যাশইন কনফার্ম করুন</button>
+            </form>
           </div>
         ) : (
           <div>
@@ -126,7 +177,7 @@ export default function App() {
               />
             </div>
 
-            {/* যদি স্লট ট্যাব সিলেক্ট করা হয়, তবে ছবি ৩৩৯০/৩৯১ এর মতো কোম্পানির লিস্ট দেখানো হবে */}
+            {/* স্লট ট্যাবে প্রোভাইডার ফিল্টার */}
             {activeTab === 'slot' && (
               <div style={{ marginBottom: '20px' }}>
                 <p style={{ fontSize: '12px', color: '#94a3b8', marginBottom: '8px' }}>প্রোভাইডার সিলেক্ট করুন:</p>
@@ -150,7 +201,7 @@ export default function App() {
               </div>
             )}
 
-            {/* গেম গ্রিড (৩য় ছবির মতো লেআউট) */}
+            {/* গেম গ্রিড */}
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px' }}>
               {(activeTab === 'hot' && searchQuery === '' && activeProvider === 'all' ? hotGames : filteredGames).map(game => (
                 <div key={game.id} onClick={() => setSelectedGame(game)} style={{ background: '#1a2238', borderRadius: '10px', padding: '8px', textAlign: 'center', border: '1px solid #2a3655', cursor: 'pointer', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
@@ -173,21 +224,9 @@ export default function App() {
           <div style={{ fontSize: '18px' }}>🏠</div>
           <span style={{ fontSize: '10px' }}>হোম</span>
         </div>
-        <div style={{ textAlign: 'center', cursor: 'pointer', color: '#94a3b8' }}>
-          <div style={{ fontSize: '18px' }}>🔄</div>
-          <span style={{ fontSize: '10px' }}>শেয়ার</span>
-        </div>
-        <div style={{ textAlign: 'center', cursor: 'pointer', color: '#94a3b8' }}>
-          <div style={{ fontSize: '18px' }}>🎁</div>
-          <span style={{ fontSize: '10px' }}>প্রমোশন</span>
-        </div>
-        <div style={{ textAlign: 'center', cursor: 'pointer', color: '#94a3b8' }}>
+        <div onClick={() => { setActiveTab('deposit'); setSelectedGame(null); }} style={{ textAlign: 'center', cursor: 'pointer', color: activeTab === 'deposit' ? '#00ffcc' : '#94a3b8' }}>
           <div style={{ fontSize: '18px' }}>💳</div>
-          <span style={{ fontSize: '10px' }}>ডিপোজিট</span>
-        </div>
-        <div style={{ textAlign: 'center', cursor: 'pointer', color: '#94a3b8' }}>
-          <div style={{ fontSize: '18px' }}>👤</div>
-          <span style={{ fontSize: '10px' }}>সদস্যতা</span>
+          <span style={{ fontSize: '10px' }}>ক্যাশইন</span>
         </div>
       </nav>
 
