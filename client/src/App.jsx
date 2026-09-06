@@ -23,7 +23,7 @@ export default function App() {
     return saved ? JSON.parse(saved) : [];
   });
 
-  const [withdrawAmount, setWithdrawAmount] = useState('');
+  const [withdrawAmount, setWithdrawAmount] = useState('');const [isAuthOpen, setIsAuthOpen] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [winAlert, setWinAlert] = useState('স্বাগতম LA94.COM-এ! ডিপোজিট করে খেলা শুরু করুন।');
 
