@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-
+import AuthModal from './components/AuthModal';
 export default function App() {
   const [balance, setBalance] = useState(() => {
     const saved = localStorage.getItem('la94_balance');
