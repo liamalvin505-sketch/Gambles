@@ -6,6 +6,7 @@ export default function App() {
     return saved !== null ? parseFloat(saved) : 0;
   });
 
+  // রেকর্ড বা হিস্ট্রি ডাটা লোকালস্টোরেজ থেকে লোড করা
   const [depositHistory, setDepositHistory] = useState(() => {
     const saved = localStorage.getItem('la94_deposits');
     return saved ? JSON.parse(saved) : [];
@@ -17,7 +18,7 @@ export default function App() {
   });
 
   const [activeTab, setActiveTab] = useState('home'); 
-  const [subPage, setSubPage] = useState(null); 
+  const [subPage, setSubPage] = useState(null); // 'depositRecord', 'betRecord', 'profitRecord', etc.
   const [selectedGame, setSelectedGame] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
   
@@ -25,14 +26,7 @@ export default function App() {
   const [trxId, setTrxId] = useState('');
   const [withdrawAmount, setWithdrawAmount] = useState('');
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const [winAlert, setWinAlert] = useState('স্বাগতম LA94.COM-এ! রিয়েল ক্যাশইন ও ফাস্ট গেম প্লে।');
-
-  // লাইভ চ্যাট স্টেট (কাউন্টার সার্ভিস)
-  const [chatOpen, setChatOpen] = useState(false);
-  const [chatMessages, setChatMessages] = useState([
-    { sender: 'support', text: 'হ্যালো! LA94 কাস্টমার কেয়ারে আপনাকে স্বাগতম। কীভাবে সাহায্য করতে পারি?' }
-  ]);
-  const [chatInput, setChatInput] = useState('');
+  const [winAlert, setWinAlert] = useState('স্বাগতম LA94.COM-এ! ফাস্ট ক্যাশইন ও গেম প্লে।');
 
   useEffect(() => {
     localStorage.setItem('la94_balance', balance);
@@ -77,7 +71,10 @@ export default function App() {
       alert('সঠিক পরিমাণ ও TrxID দিন!');
       return;
     }
+
     setBalance(prev => prev + amount);
+    
+    // ডিপোজিট রেকর্ড যুক্ত করা
     const newDeposit = {
       id: Date.now(),
       amount: amount,
@@ -86,6 +83,7 @@ export default function App() {
       status: 'সফল'
     };
     setDepositHistory([newDeposit, ...depositHistory]);
+
     alert(`সফল! অ্যাকাউন্টে ৳ ${amount} যোগ হয়েছে।`);
     setDepositAmount('');
     setTrxId('');
@@ -111,10 +109,11 @@ export default function App() {
     setSubPage(null);
   };
 
+  // গেম খেলার পর ফেক বেট বা লাভ-লস রেকর্ড জেনারেট করা
   const playGame = (game) => {
     setSelectedGame(game);
     const betAmt = 100;
-    const isWin = Math.random() > 0.4;
+    const isWin = Math.random() > 0.4; // ৬০% জেতার সম্ভাবনা
     const winAmt = isWin ? Math.floor(Math.random() * 400) + 50 : 0;
     const profitLoss = winAmt - betAmt;
 
@@ -131,29 +130,10 @@ export default function App() {
     setBetHistory([newBet, ...betHistory]);
   };
 
-  const sendChatMessage = (e) => {
-    e.preventDefault();
-    if (!chatInput.trim()) return;
-    const userMsg = { sender: 'user', text: chatInput };
-    setChatMessages(prev => [...prev, userMsg]);
-    const txt = chatInput;
-    setChatInput('');
-
-    setTimeout(() => {
-      let reply = 'আপনার সমস্যাটি নোট করা হয়েছে। আমাদের এজেন্ট শীঘ্রই সমাধান করে দেবেন।';
-      if (txt.toLowerCase().includes('deposit') || txt.includes('ডিপোজিট')) {
-        reply = 'ডিপোজিট করার পর ব্যালেন্স না আসলে TrxID সহ আমাদের জানান।';
-      } else if (txt.toLowerCase().includes('withdraw') || txt.includes('উত্তোলন')) {
-        reply = 'উত্তোলন সাধারণত ৫ থেকে ১৫ মিনিটের মধ্যে অ্যাকাউন্টে পৌঁছে যায়।';
-      }
-      setChatMessages(prev => [...prev, { sender: 'support', text: reply }]);
-    }, 1000);
-  };
-
   return (
     <div style={{ background: '#121824', color: '#fff', minHeight: '100vh', fontFamily: 'Arial, sans-serif', paddingBottom: '70px', maxWidth: '480px', margin: '0 auto', position: 'relative' }}>
       
-      {/* টপ হেডার */}
+      {/* হেডার */}
       <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 15px', background: '#182030', borderBottom: '1px solid #222d42', position: 'sticky', top: 0, zIndex: 100 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
           <span onClick={() => setDrawerOpen(true)} style={{ fontSize: '22px', cursor: 'pointer', color: '#fff' }}>☰</span>
@@ -193,14 +173,13 @@ export default function App() {
               <div onClick={() => { setActiveTab('withdraw'); setDrawerOpen(false); }} style={{ cursor: 'pointer' }}>💳 উত্তোলন করুন</div>
               <div onClick={() => { setActiveTab('account'); setSubPage(null); setDrawerOpen(false); }} style={{ cursor: 'pointer' }}>👤 আমার অ্যাকাউন্ট</div>
               <div onClick={() => { setActiveTab('home'); setSubPage(null); setDrawerOpen(false); }} style={{ cursor: 'pointer' }}>🏠 হোম পেজ</div>
-              <div onClick={() => { setChatOpen(true); setDrawerOpen(false); }} style={{ cursor: 'pointer' }}>🎧 লাইভ সাপোর্ট</div>
             </div>
           </div>
           <div style={{ flex: 1 }} onClick={() => setDrawerOpen(false)}></div>
         </div>
       )}
 
-      {/* লাইভ উইনিং নোটিফিকেশন বার */}
+      {/* লাইভ উইনিং নোটিফিকেশন */}
       <div style={{ background: '#1e293b', color: '#ffcc00', padding: '6px 12px', fontSize: '11px', borderBottom: '1px solid #283548', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
         📢 <span>{winAlert}</span>
       </div>
@@ -219,9 +198,10 @@ export default function App() {
             </div>
           </div>
         ) : subPage === 'depositRecord' ? (
+          /* জমা রেকর্ড পেজ */
           <div style={{ background: '#182030', padding: '15px', borderRadius: '10px' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '15px' }}>
-              <h3 style={{ color: '#ffb800', fontSize: '15px', margin: 0 }}>📥 জমা রেকর্ড</h3>
+              <h3 style={{ color: '#ffb800', fontSize: '15px', margin: 0 }}>📥 জমা রেকর্ড (Deposit History)</h3>
               <button onClick={() => setSubPage(null)} style={{ background: '#222d42', color: '#fff', border: 'none', padding: '4px 10px', borderRadius: '4px', fontSize: '11px', cursor: 'pointer' }}>ফিরে যান</button>
             </div>
             {depositHistory.length === 0 ? (
@@ -240,19 +220,20 @@ export default function App() {
             )}
           </div>
         ) : subPage === 'betRecord' || subPage === 'profitRecord' ? (
+          /* বেটিং রেকর্ড ও লাভ-লস পেজ */
           <div style={{ background: '#182030', padding: '15px', borderRadius: '10px' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '15px' }}>
               <h3 style={{ color: '#ffb800', fontSize: '15px', margin: 0 }}>{subPage === 'betRecord' ? '📊 বেটিং রেকর্ড' : '📈 লাভ এবং লস'}</h3>
               <button onClick={() => setSubPage(null)} style={{ background: '#222d42', color: '#fff', border: 'none', padding: '4px 10px', borderRadius: '4px', fontSize: '11px', cursor: 'pointer' }}>ফিরে যান</button>
             </div>
             {betHistory.length === 0 ? (
-              <p style={{ textAlign: 'center', color: '#aaa', fontSize: '12px' }}>কোনো বেট রেকর্ড পাওয়া যায়নি।</p>
+              <p style={{ textAlign: 'center', color: '#aaa', fontSize: '12px' }}>কোনো গেম খেলার রেকর্ড নেই! গেম খেলে ট্রাই করুন।</p>
             ) : (
               betHistory.map(item => (
                 <div key={item.id} style={{ background: '#121824', padding: '10px', borderRadius: '6px', marginBottom: '8px', border: '1px solid #222d42', display: 'flex', justifyContent: 'space-between', fontSize: '12px' }}>
                   <div>
                     <div style={{ fontWeight: 'bold', color: '#fff' }}>{item.gameName}</div>
-                    <div style={{ color: '#888', fontSize: '10px' }}>বাজি: ৳ {item.bet} | {item.date}</div>
+                    <div style={{ color: '#888', fontSize: '10px' }}>ব্যালেন্স বাজি: ৳ {item.bet} | সময়: {item.date}</div>
                   </div>
                   <div style={{ textAlign: 'right' }}>
                     <div style={{ color: item.net >= 0 ? '#22c55e' : '#ef4444', fontWeight: 'bold' }}>
@@ -263,70 +244,6 @@ export default function App() {
                 </div>
               ))
             )}
-          </div>
-        ) : subPage === 'rewards' ? (
-          <div style={{ background: '#182030', padding: '15px', borderRadius: '10px' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '15px' }}>
-              <h3 style={{ color: '#ffb800', fontSize: '15px', margin: 0 }}>🏆 পুরস্কার সেন্টার</h3>
-              <button onClick={() => setSubPage(null)} style={{ background: '#222d42', color: '#fff', border: 'none', padding: '4px 10px', borderRadius: '4px', fontSize: '11px', cursor: 'pointer' }}>ফিরে যান</button>
-            </div>
-            <div style={{ background: '#121824', padding: '12px', borderRadius: '8px', border: '1px solid #222d42', marginBottom: '10px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <div>
-                <div style={{ fontSize: '13px', fontWeight: 'bold', color: '#fff' }}>ডেইলি চেক-ইন বোনাস</div>
-                <div style={{ fontSize: '10px', color: '#aaa' }}>প্রতিদিন লগইন করে রিওয়ার্ড নিন</div>
-              </div>
-              <button onClick={() => { setBalance(b => b + 50); alert('৳৫০ বোনাস সফলভাবে যোগ হয়েছে!'); setSubPage(null); }} style={{ background: '#ffb800', color: '#000', border: 'none', padding: '6px 12px', borderRadius: '5px', fontWeight: 'bold', fontSize: '11px', cursor: 'pointer' }}>দাবি করুন</button>
-            </div>
-          </div>
-        ) : subPage === 'invite' ? (
-          <div style={{ background: '#182030', padding: '15px', borderRadius: '10px' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '15px' }}>
-              <h3 style={{ color: '#ffb800', fontSize: '15px', margin: 0 }}>🤝 বন্ধুদের আমন্ত্রণ</h3>
-              <button onClick={() => setSubPage(null)} style={{ background: '#222d42', color: '#fff', border: 'none', padding: '4px 10px', borderRadius: '4px', fontSize: '11px', cursor: 'pointer' }}>ফিরে যান</button>
-            </div>
-            <div style={{ background: '#121824', padding: '12px', borderRadius: '8px', border: '1px solid #222d42', textAlign: 'center' }}>
-              <p style={{ fontSize: '11px', color: '#aaa' }}>আপনার রেফারেল লিংক:</p>
-              <input type="text" readOnly value="https://la94.com/?ref=liamalvin99" style={{ width: '100%', padding: '8px', background: '#182030', color: '#ffb800', border: '1px solid #222d42', borderRadius: '5px', textAlign: 'center', fontSize: '11px', marginBottom: '10px' }} />
-              <button onClick={() => alert('লিংক কপি করা হয়েছে!')} style={{ background: '#3b82f6', color: '#fff', border: 'none', padding: '8px 15px', borderRadius: '5px', fontSize: '11px', fontWeight: 'bold', cursor: 'pointer' }}>লিংক কপি করুন</button>
-            </div>
-          </div>
-        ) : subPage === 'missions' ? (
-          <div style={{ background: '#182030', padding: '15px', borderRadius: '10px' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '15px' }}>
-              <h3 style={{ color: '#ffb800', fontSize: '15px', margin: 0 }}>🎁 মিশন সেন্টার</h3>
-              <button onClick={() => setSubPage(null)} style={{ background: '#222d42', color: '#fff', border: 'none', padding: '4px 10px', borderRadius: '4px', fontSize: '11px', cursor: 'pointer' }}>ফিরে যান</button>
-            </div>
-            <div style={{ background: '#121824', padding: '10px', borderRadius: '8px', border: '1px solid #222d42', marginBottom: '8px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '12px' }}>
-              <div>
-                <div>প্রথম গেম খেলুন</div>
-                <div style={{ fontSize: '10px', color: '#aaa' }}>পুরস্কার: ৳ ১০০</div>
-              </div>
-              <button onClick={() => { setBalance(b => b + 100); alert('মিশন সম্পন্ন! ৳১০০ যোগ হয়েছে।'); setSubPage(null); }} style={{ background: '#22c55e', color: '#fff', border: 'none', padding: '5px 10px', borderRadius: '4px', fontSize: '11px', cursor: 'pointer' }}>সংগ্রহ</button>
-            </div>
-          </div>
-        ) : subPage === 'rebate' ? (
-          <div style={{ background: '#182030', padding: '15px', borderRadius: '10px' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '15px' }}>
-              <h3 style={{ color: '#ffb800', fontSize: '15px', margin: 0 }}>💰 রিবেট ক্যাশব্যাক</h3>
-              <button onClick={() => setSubPage(null)} style={{ background: '#222d42', color: '#fff', border: 'none', padding: '4px 10px', borderRadius: '4px', fontSize: '11px', cursor: 'pointer' }}>ফিরে যান</button>
-            </div>
-            <div style={{ background: '#121824', padding: '15px', borderRadius: '8px', textAlign: 'center' }}>
-              <div style={{ fontSize: '12px', color: '#aaa', marginBottom: '5px' }}>দাবি করার মতো রিবেট:</div>
-              <div style={{ fontSize: '20px', color: '#22c55e', fontWeight: 'bold', marginBottom: '10px' }}>৳ ১৪.৫০</div>
-              <button onClick={() => { setBalance(b => b + 14.5); alert('রিবেট সফলভাবে যোগ হয়েছে!'); setSubPage(null); }} style={{ background: '#ffb800', color: '#000', border: 'none', padding: '8px 20px', borderRadius: '5px', fontWeight: 'bold', fontSize: '12px', cursor: 'pointer' }}>রিবেট নিন</button>
-            </div>
-          </div>
-        ) : subPage === 'security' ? (
-          <div style={{ background: '#182030', padding: '15px', borderRadius: '10px' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '15px' }}>
-              <h3 style={{ color: '#ffb800', fontSize: '15px', margin: 0 }}>🛡️ সুরক্ষা কেন্দ্র</h3>
-              <button onClick={() => setSubPage(null)} style={{ background: '#222d42', color: '#fff', border: 'none', padding: '4px 10px', borderRadius: '4px', fontSize: '11px', cursor: 'pointer' }}>ফিরে যান</button>
-            </div>
-            <div style={{ background: '#121824', padding: '12px', borderRadius: '8px', fontSize: '12px' }}>
-              <div style={{ marginBottom: '8px', color: '#22c55e' }}>✔ লগইন পাসওয়ার্ড সুরক্ষিত</div>
-              <div style={{ marginBottom: '8px', color: '#ffb800' }}>⚠ ফান্ড পাসওয়ার্ড পরিবর্তন করুন</div>
-              <div style={{ color: '#22c55e' }}>✔ মোবাইল নম্বর ভেরিফাইড</div>
-            </div>
           </div>
         ) : activeTab === 'deposit' ? (
           <div style={{ background: '#182030', padding: '15px', borderRadius: '10px', border: '1px solid #222d42' }}>
@@ -372,9 +289,9 @@ export default function App() {
               </div>
             </div>
 
-            {/* সদস্য সেন্টার গ্রিড - প্রতিটি বাটন এখন আসল পেজে নিয়ে যাবে */}
+            {/* সদস্য সেন্টার গ্রিড - এখানে ক্লিক করলে সরাসরি কার্যকরী পেজ আসবে */}
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '10px', textAlign: 'center' }}>
-              <div onClick={() => setSubPage('rewards')} style={{ background: '#182030', padding: '10px 5px', borderRadius: '8px', border: '1px solid #222d42', cursor: 'pointer' }}>
+              <div onClick={() => alert('পুরস্কার সেন্টার')} style={{ background: '#182030', padding: '10px 5px', borderRadius: '8px', border: '1px solid #222d42', cursor: 'pointer' }}>
                 <div style={{ fontSize: '20px', marginBottom: '5px' }}>🏆</div>
                 <span style={{ fontSize: '9px', color: '#ccc' }}>পুরস্কার সেন্টার</span>
               </div>
@@ -390,37 +307,21 @@ export default function App() {
                 <div style={{ fontSize: '20px', marginBottom: '5px' }}>📥</div>
                 <span style={{ fontSize: '9px', color: '#ccc' }}>জমা রেকর্ড</span>
               </div>
-              <div onClick={() => setSubPage('depositRecord')} style={{ background: '#182030', padding: '10px 5px', borderRadius: '8px', border: '1px solid #222d42', cursor: 'pointer' }}>
+              <div onClick={() => alert('উত্তোলন রেকর্ড')} style={{ background: '#182030', padding: '10px 5px', borderRadius: '8px', border: '1px solid #222d42', cursor: 'pointer' }}>
                 <div style={{ fontSize: '20px', marginBottom: '5px' }}>📤</div>
                 <span style={{ fontSize: '9px', color: '#ccc' }}>উত্তোলন রেকর্ড</span>
               </div>
-              <div onClick={() => setSubPage('depositRecord')} style={{ background: '#182030', padding: '10px 5px', borderRadius: '8px', border: '1px solid #222d42', cursor: 'pointer' }}>
+              <div onClick={() => alert('অ্যাকাউন্ট রেকর্ড')} style={{ background: '#182030', padding: '10px 5px', borderRadius: '8px', border: '1px solid #222d42', cursor: 'pointer' }}>
                 <div style={{ fontSize: '20px', marginBottom: '5px' }}>📑</div>
                 <span style={{ fontSize: '9px', color: '#ccc' }}>অ্যাকাউন্ট রেকর্ড</span>
               </div>
-              <div onClick={() => alert('প্রোফাইল তথ্য আপডেট করা আছে')} style={{ background: '#182030', padding: '10px 5px', borderRadius: '8px', border: '1px solid #222d42', cursor: 'pointer' }}>
+              <div onClick={() => alert('আমার অ্যাকাউন্ট')} style={{ background: '#182030', padding: '10px 5px', borderRadius: '8px', border: '1px solid #222d42', cursor: 'pointer' }}>
                 <div style={{ fontSize: '20px', marginBottom: '5px' }}>👤</div>
                 <span style={{ fontSize: '9px', color: '#ccc' }}>আমার অ্যাকাউন্ট</span>
               </div>
-              <div onClick={() => setSubPage('security')} style={{ background: '#182030', padding: '10px 5px', borderRadius: '8px', border: '1px solid #222d42', cursor: 'pointer' }}>
+              <div onClick={() => alert('সুরক্ষা কেন্দ্র')} style={{ background: '#182030', padding: '10px 5px', borderRadius: '8px', border: '1px solid #222d42', cursor: 'pointer' }}>
                 <div style={{ fontSize: '20px', marginBottom: '5px' }}>🛡️</div>
                 <span style={{ fontSize: '9px', color: '#ccc' }}>সুরক্ষা কেন্দ্র</span>
-              </div>
-              <div onClick={() => setSubPage('invite')} style={{ background: '#182030', padding: '10px 5px', borderRadius: '8px', border: '1px solid #222d42', cursor: 'pointer' }}>
-                <div style={{ fontSize: '20px', marginBottom: '5px' }}>🤝</div>
-                <span style={{ fontSize: '9px', color: '#ccc' }}>বন্ধুদের আমন্ত্রণ</span>
-              </div>
-              <div onClick={() => setSubPage('missions')} style={{ background: '#182030', padding: '10px 5px', borderRadius: '8px', border: '1px solid #222d42', cursor: 'pointer' }}>
-                <div style={{ fontSize: '20px', marginBottom: '5px' }}>🎁</div>
-                <span style={{ fontSize: '9px', color: '#ccc' }}>মিশন</span>
-              </div>
-              <div onClick={() => setSubPage('rebate')} style={{ background: '#182030', padding: '10px 5px', borderRadius: '8px', border: '1px solid #222d42', cursor: 'pointer' }}>
-                <div style={{ fontSize: '20px', marginBottom: '5px' }}>💰</div>
-                <span style={{ fontSize: '9px', color: '#ccc' }}>রিবেট</span>
-              </div>
-              <div onClick={() => setChatOpen(true)} style={{ background: '#182030', padding: '10px 5px', borderRadius: '8px', border: '1px solid #222d42', cursor: 'pointer' }}>
-                <div style={{ fontSize: '20px', marginBottom: '5px' }}>🎧</div>
-                <span style={{ fontSize: '9px', color: '#ccc' }}>কাউন্টার সার্ভিস</span>
               </div>
             </div>
           </div>
@@ -435,6 +336,7 @@ export default function App() {
               <div style={{ fontSize: '30px' }}>👑</div>
             </div>
 
+            {/* প্রোফাইল কার্ড */}
             <div style={{ background: '#182030', padding: '12px', borderRadius: '10px', marginBottom: '15px', border: '1px solid #222d42', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                 <div style={{ width: '40px', height: '40px', background: '#333', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>👤</div>
@@ -449,7 +351,8 @@ export default function App() {
               </div>
             </div>
 
-            <h4 style={{ fontSize: '13px', color: '#ffb800', marginBottom: '8px' }}>🔥 গরম গেমস</h4>
+            {/* গেম গ্রিড */}
+            <h4 style={{ fontSize: '13px', color: '#ffb800', marginBottom: '8px' }}>🔥 গরম গেমস (খেললে লাভ/লস ও বেটিং রেকর্ড বাড়বে)</h4>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '8px' }}>
               {hotGames.map(game => (
                 <div key={game.id} onClick={() => playGame(game)} style={{ background: '#182030', borderRadius: '8px', padding: '6px', textAlign: 'center', border: '1px solid #222d42', cursor: 'pointer' }}>
@@ -464,38 +367,17 @@ export default function App() {
         )}
       </main>
 
-      {/* রিয়েল লাইভ চ্যাট উইন্ডো (কাউন্টার সার্ভিস / কাস্টমার সাপোর্ট) */}
-      {chatOpen && (
-        <div style={{ position: 'fixed', bottom: '70px', right: '15px', width: '300px', height: '380px', background: '#182030', border: '1px solid #ffb800', borderRadius: '10px', zIndex: 3000, display: 'flex', flexDirection: 'column', boxShadow: '0 4px 15px rgba(0,0,0,0.5)' }}>
-          <div style={{ background: '#111622', padding: '10px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTopLeftRadius: '10px', borderTopRightRadius: '10px', borderBottom: '1px solid #222d42' }}>
-            <span style={{ fontSize: '12px', fontWeight: 'bold', color: '#ffb800' }}>🎧 লাইভ কাস্টমার সার্ভিস</span>
-            <span onClick={() => setChatOpen(false)} style={{ cursor: 'pointer', fontSize: '16px', color: '#aaa' }}>✕</span>
-          </div>
-          <div style={{ flex: 1, padding: '10px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '11px' }}>
-            {chatMessages.map((msg, idx) => (
-              <div key={idx} style={{ alignSelf: msg.sender === 'user' ? 'flex-end' : 'flex-start', background: msg.sender === 'user' ? '#3b82f6' : '#222d42', padding: '6px 10px', borderRadius: '6px', maxWidth: '80%', color: '#fff' }}>
-                {msg.text}
-              </div>
-            ))}
-          </div>
-          <form onSubmit={sendChatMessage} style={{ display: 'flex', borderTop: '1px solid #222d42', padding: '6px', background: '#111622' }}>
-            <input type="text" placeholder="মেসেজ লিখুন..." value={chatInput} onChange={(e) => setChatInput(e.target.value)} style={{ flex: 1, background: '#121824', border: '1px solid #222d42', color: '#fff', padding: '6px', borderRadius: '4px', fontSize: '11px', outline: 'none' }} />
-            <button type="submit" style={{ background: '#ffb800', color: '#000', border: 'none', padding: '6px 10px', borderRadius: '4px', marginLeft: '5px', fontWeight: 'bold', fontSize: '11px', cursor: 'pointer' }}>পাঠান</button>
-          </form>
-        </div>
-      )}
-
-      {/* ফুটার নেভিগেশন বার */}
+      {/* ফুটার নেভিগেশন */}
       <nav style={{ position: 'fixed', bottom: 0, left: 0, right: 0, background: '#182030', borderTop: '1px solid #222d42', display: 'flex', justifyContent: 'space-around', padding: '8px 0', zIndex: 100, maxWidth: '480px', margin: '0 auto' }}>
         <div onClick={() => { setActiveTab('home'); setSubPage(null); setSelectedGame(null); }} style={{ textAlign: 'center', cursor: 'pointer', color: activeTab === 'home' && !subPage ? '#ff3366' : '#aaa' }}>
           <div style={{ fontSize: '16px' }}>🏠</div>
           <span style={{ fontSize: '9px' }}>হোম</span>
         </div>
-        <div onClick={() => { setSubPage('invite'); setActiveTab('home'); setSelectedGame(null); }} style={{ textAlign: 'center', cursor: 'pointer', color: '#aaa' }}>
+        <div onClick={() => { setActiveTab('deposit'); setSubPage(null); setSelectedGame(null); }} style={{ textAlign: 'center', cursor: 'pointer', color: activeTab === 'deposit' ? '#22c55e' : '#aaa' }}>
           <div style={{ fontSize: '16px' }}>🤝</div>
           <span style={{ fontSize: '9px' }}>শেয়ার</span>
         </div>
-        <div onClick={() => { setSubPage('rewards'); setActiveTab('home'); setSelectedGame(null); }} style={{ textAlign: 'center', cursor: 'pointer', color: '#ffb800' }}>
+        <div onClick={() => { setActiveTab('home'); setSubPage(null); setSelectedGame(null); }} style={{ textAlign: 'center', cursor: 'pointer', color: '#ffb800' }}>
           <div style={{ fontSize: '18px' }}>🎁</div>
           <span style={{ fontSize: '9px' }}>প্রমোশন</span>
         </div>
