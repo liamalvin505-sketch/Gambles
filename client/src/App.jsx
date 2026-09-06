@@ -7,20 +7,39 @@ export default function App() {
   const [selectedGame, setSelectedGame] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
 
-  // বিশাল গেম লিস্ট (JILI, SPRIBE, PG SOFT)
+  // সম্পূর্ণ গেম লিস্ট (JILI, SPRIBE, PG SOFT, PRAGMATIC, EVOLUTION)
   const games = [
+    // JILI Games
     { id: 1, name: 'Super Ace', provider: 'JILI', category: 'slot', url: 'https://democasino.pgsoft.com/games/slot/id/69' },
-    { id: 2, name: 'Aviator', provider: 'SPRIBE', category: 'crash', url: 'https://demo.spribe.co/launch/aviator' },
-    { id: 3, name: 'Wild Bounty Showdown', provider: 'PG', category: 'slot', url: 'https://democasino.pgsoft.com/games/slot/id/74' },
-    { id: 4, name: 'Mahjong Ways 2', provider: 'PG', category: 'slot', url: 'https://democasino.pgsoft.com/games/slot/id/74' },
-    { id: 5, name: 'Gates of Olympus', provider: 'PRAGMATIC', category: 'slot', url: 'https://democasino.pgsoft.com/games/slot/id/69' },
-    { id: 6, name: 'Fortune Gems', provider: 'JILI', category: 'slot', url: 'https://democasino.pgsoft.com/games/slot/id/74' },
-    { id: 7, name: 'Money Coming', provider: 'JILI', category: 'slot', url: 'https://democasino.pgsoft.com/games/slot/id/69' },
-    { id: 8, name: 'Spaceman', provider: 'PRAGMATIC', category: 'crash', url: 'https://demo.spribe.co/launch/aviator' },
-    { id: 9, name: 'Candy Bonanza', provider: 'PG', category: 'slot', url: 'https://democasino.pgsoft.com/games/slot/id/74' },
-    { id: 10, name: 'Live Roulette', provider: 'EVO', category: 'live', url: 'https://casino.delawartest.com/iframe-roulette' },
-    { id: 11, name: 'Baccarat Live', provider: 'EVO', category: 'live', url: 'https://casino.delawartest.com/iframe-roulette' },
-    { id: 12, name: 'Dragon Tiger', provider: 'JILI', category: 'live', url: 'https://casino.delawartest.com/iframe-roulette' }
+    { id: 2, name: 'Fortune Gems', provider: 'JILI', category: 'slot', url: 'https://democasino.pgsoft.com/games/slot/id/74' },
+    { id: 3, name: 'Money Coming', provider: 'JILI', category: 'slot', url: 'https://democasino.pgsoft.com/games/slot/id/69' },
+    { id: 4, name: 'Golden Empire', provider: 'JILI', category: 'slot', url: 'https://democasino.pgsoft.com/games/slot/id/74' },
+    { id: 5, name: 'Crazy Seven', provider: 'JILI', category: 'slot', url: 'https://democasino.pgsoft.com/games/slot/id/69' },
+    { id: 6, name: 'Ali Baba', provider: 'JILI', category: 'slot', url: 'https://democasino.pgsoft.com/games/slot/id/74' },
+
+    // Spribe & Crash Games
+    { id: 7, name: 'Aviator', provider: 'SPRIBE', category: 'crash', url: 'https://demo.spribe.co/launch/aviator' },
+    { id: 8, name: 'Spaceman', provider: 'SPRIBE', category: 'crash', url: 'https://demo.spribe.co/launch/aviator' },
+    { id: 9, name: 'JetX', provider: 'SPRIBE', category: 'crash', url: 'https://demo.spribe.co/launch/aviator' },
+
+    // PG Soft Games
+    { id: 10, name: 'Wild Bounty Showdown', provider: 'PG', category: 'slot', url: 'https://democasino.pgsoft.com/games/slot/id/74' },
+    { id: 11, name: 'Mahjong Ways 2', provider: 'PG', category: 'slot', url: 'https://democasino.pgsoft.com/games/slot/id/74' },
+    { id: 12, name: 'Candy Bonanza', provider: 'PG', category: 'slot', url: 'https://democasino.pgsoft.com/games/slot/id/69' },
+    { id: 13, name: 'Treasures of Aztec', provider: 'PG', category: 'slot', url: 'https://democasino.pgsoft.com/games/slot/id/74' },
+    { id: 14, name: 'Lucky Neko', provider: 'PG', category: 'slot', url: 'https://democasino.pgsoft.com/games/slot/id/69' },
+
+    // Pragmatic Play Games
+    { id: 15, name: 'Gates of Olympus', provider: 'PRAGMATIC', category: 'slot', url: 'https://democasino.pgsoft.com/games/slot/id/69' },
+    { id: 16, name: 'Sweet Bonanza', provider: 'PRAGMATIC', category: 'slot', url: 'https://democasino.pgsoft.com/games/slot/id/74' },
+    { id: 17, name: 'Starlight Princess', provider: 'PRAGMATIC', category: 'slot', url: 'https://democasino.pgsoft.com/games/slot/id/69' },
+    { id: 18, name: 'Wolf Gold', provider: 'PRAGMATIC', category: 'slot', url: 'https://democasino.pgsoft.com/games/slot/id/74' },
+
+    // Live Casino
+    { id: 19, name: 'Live Roulette', provider: 'EVO', category: 'live', url: 'https://casino.delawartest.com/iframe-roulette' },
+    { id: 20, name: 'Baccarat Live', provider: 'EVO', category: 'live', url: 'https://casino.delawartest.com/iframe-roulette' },
+    { id: 21, name: 'Dragon Tiger', provider: 'EVO', category: 'live', url: 'https://casino.delawartest.com/iframe-roulette' },
+    { id: 22, name: 'Andar Bahar', provider: 'EVO', category: 'live', url: 'https://casino.delawartest.com/iframe-roulette' }
   ];
 
   const filteredGames = games.filter(game => {
@@ -50,7 +69,7 @@ export default function App() {
         <marquee scrollamount="4">স্বাগত বোনাস ৫০০ কোটি টাকার! যেকোনো সমস্যায় লাইভ চ্যাট করুন।</marquee>
       </div>
 
-      {/* ইউজার কুইক মেনু (ডিপোজিট, উত্তোলন ইত্যাদি) */}
+      {/* ইউজার কুইক মেনু */}
       <div style={{ display: 'flex', justifyContent: 'space-around', padding: '12px 10px', background: '#151b2b', borderBottom: '1px solid #25304d', textAlign: 'center' }}>
         <div onClick={() => setActiveTab('deposit')} style={{ cursor: 'pointer' }}>
           <div style={{ background: '#223055', width: '35px', height: '35px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 4px auto' }}>💳</div>
@@ -70,7 +89,7 @@ export default function App() {
         </div>
       </div>
 
-      {/* গেম ক্যাটাগরি আইকন মেনু */}
+      {/* গেম ক্যাটাগরি মেনু */}
       <div style={{ display: 'flex', gap: '15px', padding: '12px 15px', overflowX: 'auto', background: '#121826' }}>
         <div onClick={() => { setActiveTab('slot'); setSelectedGame(null); }} style={{ textAlign: 'center', cursor: 'pointer', minWidth: '60px' }}>
           <div style={{ background: activeTab === 'slot' ? '#3b82f6' : '#1e293b', padding: '10px', borderRadius: '12px', fontSize: '18px' }}>🎰</div>
@@ -86,7 +105,7 @@ export default function App() {
         </div>
       </div>
 
-      {/* মূল কন্টেন্ট ও গেম লিস্ট */}
+      {/* মূল কন্টেন্ট */}
       <main style={{ padding: '15px' }}>
         {selectedGame ? (
           <div>
@@ -111,7 +130,7 @@ export default function App() {
           </div>
         ) : (
           <div>
-            {/* বিগ উইন জ্যাকপট ব্যানার */}
+            {/* জ্যাকপট ব্যানার */}
             <div style={{ background: 'linear-gradient(135deg, #2b1d0c, #4a2e0a)', border: '2px solid #f59e0b', borderRadius: '15px', padding: '20px', textAlign: 'center', marginBottom: '20px', boxShadow: '0 4px 15px rgba(245, 158, 11, 0.3)' }}>
               <span style={{ fontSize: '14px', fontWeight: 'bold', color: '#fbbf24' }}>👑 BIG WIN JACKPOT 👑</span>
               <div style={{ fontSize: '26px', fontWeight: '900', color: '#ffcc00', margin: '8px 0', letterSpacing: '2px' }}>৳ 26,184,294.60</div>
@@ -140,7 +159,7 @@ export default function App() {
               ))}
             </div>
 
-            {/* গেম গ্রিড (একাধিক গেম কার্ড) */}
+            {/* গেম গ্রিড */}
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '12px' }}>
               {filteredGames.map(game => (
                 <div key={game.id} style={{ background: '#1a2238', borderRadius: '10px', padding: '12px', textAlign: 'center', border: '1px solid #2a3655' }}>
