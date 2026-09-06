@@ -97,7 +97,7 @@ export default function App() {
       return;
     }
     setBalance(prev => prev + amount);
-    setTotalDeposited(prev => prev + amount); // মোট ডিপোজিট আপডেট হবে যা VIP লেভেল বাড়াবে
+    setTotalDeposited(prev => prev + amount); 
     
     const newDeposit = {
       id: Date.now(),
@@ -512,7 +512,7 @@ export default function App() {
           <div style={{ fontSize: '16px' }}>🏠</div>
           <span style={{ fontSize: '9px' }}>হোম</span>
         </div>
-        <div onClick={() => { setSubPage('invite'); setActiveTab('home'); setSelectedGame(null); }} style={{ textAlign: 'center', cursor: 'pointer', color: '#aaa' => c }}>
+        <div onClick={() => { setSubPage('invite'); setActiveTab('home'); setSelectedGame(null); }} style={{ textAlign: 'center', cursor: 'pointer', color: '#aaa' }}>
           <div style={{ fontSize: '16px' }}>🤝</div>
           <span style={{ fontSize: '9px' }}>শেয়ার</span>
         </div>
