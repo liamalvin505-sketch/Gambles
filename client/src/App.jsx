@@ -8,7 +8,6 @@ export default function App() {
   });
 
   const [activeTab, setActiveTab] = useState('home'); // home, deposit, account, withdraw
-  const [selectedGame, setSelectedGame] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedProvider, setSelectedProvider] = useState('All');
   const [subPage, setSubPage] = useState(null);
@@ -18,7 +17,7 @@ export default function App() {
   const [depositChannel, setDepositChannel] = useState('চ্যানেল 80');
   const [depositAmount, setDepositAmount] = useState('500');
   const [trxId, setTrxId] = useState('');
-  const [depositStep, setDepositStep] = useState(1); // 1: Amount selection, 2: Gateway Details & TrxID
+  const [depositStep, setDepositStep] = useState(1);
   const [pendingDeposits, setPendingDeposits] = useState(() => {
     const saved = localStorage.getItem('la94_pending');
     return saved ? JSON.parse(saved) : [];
@@ -53,7 +52,7 @@ export default function App() {
     return () => clearInterval(interval);
   }, []);
 
-  // প্রোভাইডার লিস্ট (স্ক্রিনশটের আদলে)
+  // প্রোভাইডার লিস্ট
   const providers = [
     'All', 'Jili', 'Pocket Games Soft', 'BNG', 'JDB', 'FA CHAI Gaming', 
     'BTGaming', 'Naga Games', 'KA Gaming', 'PLAYSTAR', 'Askmeslot', 'Victory Ark',
@@ -64,21 +63,21 @@ export default function App() {
     'Relax Gaming', '5G', 'Smartsoft', 'No Limit City', 'Spribe', 'Joker', 'PP', 'KingMidas', 'Aviator', 'InOut'
   ];
 
-  // ৩১০+ গেমের ডাটাবেস জেনারেটর ও লিস্ট
+  // গেম ডাটাবেস ও আসল খেলার লিংক (আপনার ইচ্ছামমতো লিংক এখানে পরিবর্তন করতে পারবেন)
   const generateMassiveGames = () => {
     const baseNames = [
-      { name: 'Aviator', prov: 'Spribe', url: 'https://demo.spribe.co/launch/aviator' },
-      { name: 'Super Ace', prov: 'Jili', url: 'https://democasino.pgsoft.com/games/slot/id/69' },
-      { name: 'Wild Bounty Showdown', prov: 'Pocket Games Soft', url: 'https://democasino.pgsoft.com/games/slot/id/74' },
-      { name: 'Fortune Gems 3', prov: 'Jili', url: 'https://democasino.pgsoft.com/games/slot/id/74' },
-      { name: 'Gates of Olympus', prov: 'PP', url: 'https://democasino.pgsoft.com/games/slot/id/69' },
-      { name: 'Sweet Bonanza', prov: 'PP', url: 'https://democasino.pgsoft.com/games/slot/id/74' },
-      { name: 'Boxing King', prov: 'Jili', url: 'https://democasino.pgsoft.com/games/slot/id/69' },
-      { name: 'Super Ace Deluxe', prov: 'Jili', url: 'https://democasino.pgsoft.com/games/slot/id/74' },
-      { name: 'Money Coming', prov: 'Jili', url: 'https://democasino.pgsoft.com/games/slot/id/69' },
-      { name: 'Roma', prov: 'Jili', url: 'https://democasino.pgsoft.com/games/slot/id/74' },
-      { name: 'Mahjong Ways 2', prov: 'Pocket Games Soft', url: 'https://democasino.pgsoft.com/games/slot/id/74' },
-      { name: 'Treasures of Aztec', prov: 'Pocket Games Soft', url: 'https://democasino.pgsoft.com/games/slot/id/69' }
+      { name: 'Aviator', prov: 'Spribe', url: 'https://spribe.co/games/aviator' },
+      { name: 'Super Ace', prov: 'Jili', url: 'https://www.jiliace.com/' },
+      { name: 'Wild Bounty Showdown', prov: 'Pocket Games Soft', url: 'https://pgsoft.com/' },
+      { name: 'Fortune Gems 3', prov: 'Jili', url: 'https://www.jiliace.com/' },
+      { name: 'Gates of Olympus', prov: 'PP', url: 'https://www.pragmaticplay.com/' },
+      { name: 'Sweet Bonanza', prov: 'PP', url: 'https://www.pragmaticplay.com/' },
+      { name: 'Boxing King', prov: 'Jili', url: 'https://www.jiliace.com/' },
+      { name: 'Super Ace Deluxe', prov: 'Jili', url: 'https://www.jiliace.com/' },
+      { name: 'Money Coming', prov: 'Jili', url: 'https://www.jiliace.com/' },
+      { name: 'Roma', prov: 'Jili', url: 'https://www.jiliace.com/' },
+      { name: 'Mahjong Ways 2', prov: 'Pocket Games Soft', url: 'https://pgsoft.com/' },
+      { name: 'Treasures of Aztec', prov: 'Pocket Games Soft', url: 'https://pgsoft.com/' }
     ];
 
     let allGames = [...baseNames];
@@ -91,7 +90,7 @@ export default function App() {
             id: `g_${idCounter++}`,
             name: `${prov} Slot ${i}`,
             prov: prov,
-            url: i % 2 === 0 ? 'https://democasino.pgsoft.com/games/slot/id/69' : 'https://demo.spribe.co/launch/aviator'
+            url: 'https://www.google.com' // দরকারমতো আসল গেমের লিংক এখানে বসাতে পারেন
           });
         }
       }
@@ -124,7 +123,6 @@ export default function App() {
     setActiveTab('home');
   };
 
-  // অ্যাডমিন সিমুলেশন প্যানেল (অ্যাপ্রুভ করার জন্য)
   const approveDeposit = (id, amount) => {
     setBalance(prev => prev + amount);
     setPendingDeposits(pendingDeposits.filter(item => item.id !== id));
@@ -275,16 +273,7 @@ export default function App() {
 
       {/* মেইন বডি */}
       <main style={{ padding: '10px' }}>
-        {selectedGame ? (
-          <div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
-              <button onClick={() => setSelectedGame(null)} style={{ background: '#222d42', color: '#fff', border: 'none', padding: '6px 12px', borderRadius: '5px', cursor: 'pointer', fontSize: '11px' }}>← লবিতে ফিরুন</button>
-            </div>
-            <div style={{ width: '100%', height: '500px', background: '#000', borderRadius: '8px', overflow: 'hidden', border: '1px solid #222d42' }}>
-              <iframe src={selectedGame.url} title={selectedGame.name} width="100%" height="100%" style={{ border: 'none' }} allowFullScreen></iframe>
-            </div>
-          </div>
-        ) : activeTab === 'deposit' ? (
+        {activeTab === 'deposit' ? (
           <div style={{ background: '#182030', padding: '15px', borderRadius: '10px', border: '1px solid #222d42' }}>
             <h3 style={{ color: '#ffb800', marginBottom: '15px', textAlign: 'center', fontSize: '15px' }}>টাকা জমা দিন (ডিপোজিট)</h3>
 
@@ -331,12 +320,11 @@ export default function App() {
               </div>
             ) : (
               <div>
-                {/* টার্গেট অ্যাকাউন্ট ব্ল্যাঙ্ক রাখা হয়েছে */}
                 <div style={{ background: '#121824', padding: '12px', borderRadius: '8px', marginBottom: '15px', border: '1px solid #222d42' }}>
                   <div style={{ fontSize: '12px', color: '#aaa', marginBottom: '6px' }}>অ্যাকাউন্ট পে করুন ({depositMethod} Send Money):</div>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
-                    <span style={{ fontSize: '14px', fontWeight: 'bold', color: '#ef4444' }}>[ এখানে নম্বর বসবে ]</span>
-                    <button onClick={() => { navigator.clipboard.writeText(''); alert('নম্বর কপি করা হয়েছে!'); }} style={{ background: '#ef4444', color: '#fff', border: 'none', padding: '5px 12px', borderRadius: '4px', fontSize: '11px', cursor: 'pointer' }}>Copy</button>
+                    <span style={{ fontSize: '14px', fontWeight: 'bold', color: '#ef4444' }}>01700000000</span>
+                    <button onClick={() => { navigator.clipboard.writeText('01700000000'); alert('নম্বর কপি করা হয়েছে!'); }} style={{ background: '#ef4444', color: '#fff', border: 'none', padding: '5px 12px', borderRadius: '4px', fontSize: '11px', cursor: 'pointer' }}>Copy</button>
                   </div>
                   <div style={{ fontSize: '12px', color: '#aaa' }}>প্রকৃত পেমেন্ট পরিমাণ: <strong style={{ color: '#ffb800' }}>৳ {depositAmount}.00</strong></div>
                 </div>
@@ -367,7 +355,6 @@ export default function App() {
         ) : activeTab === 'account' ? (
           subPage ? renderSubPageView() : (
             <div>
-              {/* ৩য় ছবির মতো একাউন্ট ড্যাশবোর্ড */}
               <div style={{ background: 'linear-gradient(135deg, #2b374e, #182030)', padding: '15px', borderRadius: '10px', border: '1px solid #ffb800', marginBottom: '15px', textAlign: 'center' }}>
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px', marginBottom: '8px' }}>
                   <div style={{ width: '45px', height: '45px', background: '#444', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '20px' }}>👨‍💼</div>
@@ -383,7 +370,6 @@ export default function App() {
                 </div>
               </div>
 
-              {/* ৩য় ছবির মতো ১২টি অপশন গ্রিড */}
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '10px', textAlign: 'center' }}>
                 {[
                   { name: 'পুরস্কার সেন্টার', icon: '🏆', color: '#fbbf24' },
@@ -432,11 +418,11 @@ export default function App() {
               ))}
             </div>
 
-            {/* গেম লিস্ট */}
+            {/* গেম লিস্ট - এখন ক্লিক করলে নতুন ট্যাবে ওপেন হবে */}
             <h4 style={{ fontSize: '13px', color: '#ffb800', marginBottom: '8px' }}>🔥 জনপ্রিয় ক্যাসিনো গেমস ({filteredGames.length})</h4>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '8px' }}>
               {filteredGames.map(game => (
-                <div key={game.id} onClick={() => setSelectedGame(game)} style={{ background: '#182030', borderRadius: '8px', padding: '8px', textAlign: 'center', border: '1px solid #222d42', cursor: 'pointer' }}>
+                <div key={game.id} onClick={() => window.open(game.url, '_blank')} style={{ background: '#182030', borderRadius: '8px', padding: '8px', textAlign: 'center', border: '1px solid #222d42', cursor: 'pointer' }}>
                   <div style={{ background: '#111622', height: '60px', borderRadius: '6px', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '5px', fontSize: '20px', color: '#ffb800' }}>🎰</div>
                   <h4 style={{ fontSize: '10px', margin: '0 0 2px 0', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', fontWeight: 'bold' }}>{game.name}</h4>
                   <span style={{ fontSize: '8px', color: '#aaa', display: 'block', marginBottom: '6px' }}>{game.prov}</span>
@@ -450,29 +436,29 @@ export default function App() {
 
       {/* ফুটার নেভিগেশন */}
       <nav style={{ position: 'fixed', bottom: 0, left: 0, right: 0, background: '#182030', borderTop: '1px solid #222d42', display: 'flex', justifyContent: 'space-around', padding: '8px 0', zIndex: 100, maxWidth: '480px', margin: '0 auto' }}>
-        <div onClick={() => { setActiveTab('home'); setSelectedGame(null); setSubPage(null); }} style={{ textAlign: 'center', cursor: 'pointer', color: activeTab === 'home' ? '#ff3366' : '#aaa' }}>
+        <div onClick={() => { setActiveTab('home'); setSubPage(null); }} style={{ textAlign: 'center', cursor: 'pointer', color: activeTab === 'home' ? '#ff3366' : '#aaa' }}>
           <div style={{ fontSize: '16px' }}>🏠</div>
           <span style={{ fontSize: '9px' }}>হোম</span>
         </div>
-        <div onClick={() => { setActiveTab('deposit'); setSelectedGame(null); setSubPage(null); }} style={{ textAlign: 'center', cursor: 'pointer', color: activeTab === 'deposit' ? '#22c55e' : '#aaa' }}>
+        <div onClick={() => { setActiveTab('deposit'); setSubPage(null); }} style={{ textAlign: 'center', cursor: 'pointer', color: activeTab === 'deposit' ? '#22c55e' : '#aaa' }}>
           <div style={{ fontSize: '16px' }}>🤝</div>
           <span style={{ fontSize: '9px' }}>শেয়ার</span>
         </div>
-        <div onClick={() => { setActiveTab('home'); setSelectedGame(null); setSubPage(null); }} style={{ textAlign: 'center', cursor: 'pointer', color: '#ffb800' }}>
+        <div onClick={() => { setActiveTab('home'); setSubPage(null); }} style={{ textAlign: 'center', cursor: 'pointer', color: '#ffb800' }}>
           <div style={{ fontSize: '18px' }}>🎁</div>
           <span style={{ fontSize: '9px' }}>প্রমোশন</span>
         </div>
-        <div onClick={() => { setActiveTab('deposit'); setSelectedGame(null); setSubPage(null); }} style={{ textAlign: 'center', cursor: 'pointer', color: activeTab === 'deposit' ? '#22c55e' : '#aaa' }}>
-          <div style={{ fontSize: '16px' }}>💳</div>
+        <div onClick={() => { setActiveTab('deposit'); setSubPage(null); }} style={{ textAlign: 'center', cursor: 'pointer', color: activeTab === 'deposit' ? '#22c55e' : '#aaa' }}>
+          <div style={{ fontSize: '16px' => 16 }}>💳</div>
           <span style={{ fontSize: '9px' }}>ডিপোজিট</span>
         </div>
-        <div onClick={() => { setActiveTab('account'); setSelectedGame(null); setSubPage(null); }} style={{ textAlign: 'center', cursor: 'pointer', color: activeTab === 'account' ? '#3b82f6' : '#aaa' }}>
+        <div onClick={() => { setActiveTab('account'); setSubPage(null); }} style={{ textAlign: 'center', cursor: 'pointer', color: activeTab === 'account' ? '#3b82f6' : '#aaa' }}>
           <div style={{ fontSize: '16px' }}>👤</div>
           <span style={{ fontSize: '9px' }}>সদস্যরা</span>
         </div>
       </nav>
 
-      {/* অথেনটিকেশন মডাল (AuthModal) */}
+      {/* অথেনটিকেশন মডাল */}
       <AuthModal isOpen={isAuthOpen} onClose={() => setIsAuthOpen(false)} />
 
     </div>
