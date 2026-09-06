@@ -31,14 +31,12 @@ export default function App() {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [winAlert, setWinAlert] = useState('স্বাগতম LA94.COM-এ! রিয়েল ক্যাশইন ও ফাস্ট গেম প্লে।');
 
-  // লাইভ চ্যাট স্টেট (কাউন্টার সার্ভিস)
   const [chatOpen, setChatOpen] = useState(false);
   const [chatMessages, setChatMessages] = useState([
     { sender: 'support', text: 'হ্যালো! LA94 কাস্টমার কেয়ারে আপনাকে স্বাগতম। কীভাবে সাহায্য করতে পারি?' }
   ]);
   const [chatInput, setChatInput] = useState('');
 
-  // অরিজিনাল সাইটের মতো মোট ডিপোজিটের উপর ভিত্তি করে VIP লেভেল ক্যালকুলেশন
   const getVipLevel = (deposited) => {
     if (deposited >= 50000) return 'VIP4';
     if (deposited >= 20000) return 'VIP3';
@@ -174,7 +172,6 @@ export default function App() {
   return (
     <div style={{ background: '#121824', color: '#fff', minHeight: '100vh', fontFamily: 'Arial, sans-serif', paddingBottom: '70px', maxWidth: '480px', margin: '0 auto', position: 'relative' }}>
       
-      {/* টপ হেডার */}
       <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 15px', background: '#182030', borderBottom: '1px solid #222d42', position: 'sticky', top: 0, zIndex: 100 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
           <span onClick={() => setDrawerOpen(true)} style={{ fontSize: '22px', cursor: 'pointer', color: '#fff' }}>☰</span>
@@ -189,7 +186,6 @@ export default function App() {
         </div>
       </header>
 
-      {/* সাইড মেনু ড্রয়ার */}
       {drawerOpen && (
         <div style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', background: 'rgba(0,0,0,0.7)', zIndex: 2000, display: 'flex' }}>
           <div style={{ width: '280px', background: '#182030', height: '100%', padding: '15px', display: 'flex', flexDirection: 'column', gap: '15px' }}>
@@ -221,7 +217,6 @@ export default function App() {
         </div>
       )}
 
-      {/* লাইভ উইনিং নোটিফিকেশন বার */}
       <div style={{ background: '#1e293b', color: '#ffcc00', padding: '6px 12px', fontSize: '11px', borderBottom: '1px solid #283548', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
         📢 <span>{winAlert}</span>
       </div>
@@ -393,7 +388,6 @@ export default function App() {
               </div>
             </div>
 
-            {/* সদস্য সেন্টার গ্রিড */}
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '10px', textAlign: 'center' }}>
               <div onClick={() => setSubPage('rewards')} style={{ background: '#182030', padding: '10px 5px', borderRadius: '8px', border: '1px solid #222d42', cursor: 'pointer' }}>
                 <div style={{ fontSize: '20px', marginBottom: '5px' }}>🏆</div>
@@ -485,7 +479,6 @@ export default function App() {
         )}
       </main>
 
-      {/* রিয়েল লাইভ চ্যাট উইন্ডো */}
       {chatOpen && (
         <div style={{ position: 'fixed', bottom: '70px', right: '15px', width: '300px', height: '380px', background: '#182030', border: '1px solid #ffb800', borderRadius: '10px', zIndex: 3000, display: 'flex', flexDirection: 'column', boxShadow: '0 4px 15px rgba(0,0,0,0.5)' }}>
           <div style={{ background: '#111622', padding: '10px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTopLeftRadius: '10px', borderTopRightRadius: '10px', borderBottom: '1px solid #222d42' }}>
@@ -506,7 +499,6 @@ export default function App() {
         </div>
       )}
 
-      {/* ফুটার নেভিগেশন বার */}
       <nav style={{ position: 'fixed', bottom: 0, left: 0, right: 0, background: '#182030', borderTop: '1px solid #222d42', display: 'flex', justifyContent: 'space-around', padding: '8px 0', zIndex: 100, maxWidth: '480px', margin: '0 auto' }}>
         <div onClick={() => { setActiveTab('home'); setSubPage(null); setSelectedGame(null); }} style={{ textAlign: 'center', cursor: 'pointer', color: activeTab === 'home' && !subPage ? '#ff3366' : '#aaa' }}>
           <div style={{ fontSize: '16px' }}>🏠</div>
